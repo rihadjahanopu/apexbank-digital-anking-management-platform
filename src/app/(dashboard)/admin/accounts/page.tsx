@@ -148,6 +148,7 @@ export default function AdminAccountsPage() {
                 }}
                 options={[
                   { value: "ALL", label: "All Statuses" },
+                  { value: ACCOUNT_STATUS.PENDING, label: "Pending Review" },
                   { value: ACCOUNT_STATUS.ACTIVE, label: "Active" },
                   { value: ACCOUNT_STATUS.FROZEN, label: "Frozen" },
                   { value: ACCOUNT_STATUS.CLOSED, label: "Closed" },
@@ -211,6 +212,8 @@ export default function AdminAccountsPage() {
                           variant={
                             acc.status === ACCOUNT_STATUS.ACTIVE
                               ? "success"
+                              : acc.status === ACCOUNT_STATUS.PENDING
+                              ? "warning"
                               : acc.status === ACCOUNT_STATUS.FROZEN
                               ? "warning"
                               : "danger"
@@ -238,7 +241,22 @@ export default function AdminAccountsPage() {
                           >
                             <Sliders className="h-3.5 w-3.5" />
                           </Button>
-                          {acc.status === ACCOUNT_STATUS.ACTIVE ? (
+                          {acc.status === ACCOUNT_STATUS.PENDING ? (
+                            <Button
+                              variant="success"
+                              size="sm"
+                              disabled={isUpdatingStatus}
+                              onClick={() =>
+                                handleStatusChange(
+                                  acc._id,
+                                  ACCOUNT_STATUS.ACTIVE
+                                )
+                              }
+                              title="Activate Account"
+                            >
+                              <Unlock className="h-3.5 w-3.5" />
+                            </Button>
+                          ) : acc.status === ACCOUNT_STATUS.ACTIVE ? (
                             <Button
                               variant="danger"
                               size="sm"
