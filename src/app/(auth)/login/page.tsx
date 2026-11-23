@@ -71,7 +71,12 @@ export default function LoginPage() {
       } else if (response.user.role === ROLES.STAFF) {
         router.push("/staff/dashboard");
       } else {
-        router.push("/customer/dashboard");
+        if (response.user.hasAccount === false) {
+          toast.info("Please complete your account opening application to activate your banking dashboard.");
+          router.push("/customer/accounts/open");
+        } else {
+          router.push("/customer/dashboard");
+        }
       }
     } catch (err: unknown) {
       const apiErr = err as { data?: { error?: string } };
@@ -102,7 +107,12 @@ export default function LoginPage() {
       } else if (response.user.role === ROLES.STAFF) {
         router.push("/staff/dashboard");
       } else {
-        router.push("/customer/dashboard");
+        if (response.user.hasAccount === false) {
+          toast.info("Please complete your account opening application to activate your banking dashboard.");
+          router.push("/customer/accounts/open");
+        } else {
+          router.push("/customer/dashboard");
+        }
       }
     } catch (err: unknown) {
       const apiErr = err as { data?: { error?: string } };
@@ -212,7 +222,12 @@ export default function LoginPage() {
       } else if (verifyData.user.role === ROLES.STAFF) {
         router.push("/staff/dashboard");
       } else {
-        router.push("/customer/dashboard");
+        if (verifyData.user.hasAccount === false) {
+          toast.info("Please complete your account opening application to activate your banking dashboard.");
+          router.push("/customer/accounts/open");
+        } else {
+          router.push("/customer/dashboard");
+        }
       }
     } catch (err: unknown) {
       const error = err as Error;
