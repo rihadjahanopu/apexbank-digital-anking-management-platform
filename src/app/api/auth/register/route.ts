@@ -1,15 +1,12 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/db";
 import { User } from "@/models/User";
-import { BankAccount } from "@/models/BankAccount";
 import { AuditLog } from "@/models/AuditLog";
 import { registerSchema } from "@/lib/validations/auth";
 import { hashPassword, signToken } from "@/lib/auth";
 import {
   ROLES,
   USER_STATUS,
-  ACCOUNT_TYPES,
-  ACCOUNT_STATUS,
 } from "@/lib/constants";
 
 export async function POST(req: Request) {
@@ -61,26 +58,6 @@ export async function POST(req: Request) {
       isVerified: role === ROLES.ADMIN, // Admins auto-verified
     });
 
-    // If Customer, automatically provision an initial primary savings account
-    let primaryAccount = null;
-    if (role === ROLES.CUSTOMER) {
-      const timestampSuffix = Date.now().toString().slice(-6);
-      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-      const accountNumber = `10${timestampSuffix}${randomSuffix}`.slice(0, 10);
-
-      primaryAccount = await BankAccount.create({
-        accountNumber,
-        userId: user._id,
-        accountType: ACCOUNT_TYPES.SAVINGS,
-        status: ACCOUNT_STATUS.ACTIVE,
-        balance: 100.0, // Welcome deposit credit
-        availableBalance: 100.0,
-        currency: "USD",
-        dailyTransferLimit: 10000,
-        minimumBalance: 50,
-      });
-    }
-
     // Sign JWT token
     const token = signToken({
       userId: user._id.toString(),
@@ -96,7 +73,7 @@ export async function POST(req: Request) {
       category: "AUTH",
       details: {
         role: user.role,
-        hasAccountCreated: !!primaryAccount,
+        hasAccountCreated: false,
       },
     });
 
@@ -111,6 +88,7 @@ export async function POST(req: Request) {
       nationalId: user.nationalId,
       transactionPinSet: false,
       isVerified: user.isVerified,
+      hasAccount: role === ROLES.ADMIN,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
     };
@@ -120,10 +98,10 @@ export async function POST(req: Request) {
       message:
         role === ROLES.ADMIN
           ? "First user registered as Administrator."
-          : "Registration successful. Welcome to Apex Bank!",
+          : "Registration successful. Please proceed to open your bank account.",
       user: userResponse,
       token,
-      primaryAccount,
+      primaryAccount: null,
     });
 
     // Set HTTP-only session cookie
