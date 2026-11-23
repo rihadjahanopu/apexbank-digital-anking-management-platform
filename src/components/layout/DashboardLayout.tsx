@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { Navbar } from "./Navbar";
 import { NotificationDrawer } from "./NotificationDrawer";
@@ -26,6 +26,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   allowedRoles,
 }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { data: meData, isLoading, isError } = useGetMeQuery();
@@ -57,10 +58,28 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           if (activeUser.role === "ADMIN") router.push("/admin/dashboard");
           else if (activeUser.role === "STAFF") router.push("/staff/dashboard");
           else router.push("/customer/dashboard");
+          return;
+        }
+      }
+
+      // Customer onboarding guard:
+      // If customer has no bank accounts yet, redirect them to account opening form
+      if (
+        activeUser &&
+        activeUser.role === "CUSTOMER" &&
+        activeUser.hasAccount === false
+      ) {
+        const allowedUnprovisionedPaths = [
+          "/customer/accounts/open",
+          "/customer/profile",
+        ];
+        if (!allowedUnprovisionedPaths.some((p) => pathname.startsWith(p))) {
+          router.push("/customer/accounts/open");
+          return;
         }
       }
     }
-  }, [isLoading, isError, user, meData, allowedRoles, router]);
+  }, [isLoading, isError, user, meData, allowedRoles, router, pathname]);
 
   const activeUser = user || meData?.user;
 
