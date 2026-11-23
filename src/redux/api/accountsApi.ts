@@ -2,10 +2,52 @@ import { apiSlice } from "./apiSlice";
 import { IBankAccount, ApiResponse, IAccountClosureRequest } from "@/types";
 
 export interface CreateAccountInput {
-  userId: string;
+  userId?: string;
+  isNewCustomer?: boolean;
+  newCustomerData?: {
+    name: string;
+    email: string;
+    phone?: string;
+    nationalId?: string;
+    address?: string;
+    password?: string;
+  };
   accountType: string;
+  currency?: string;
+  branchName?: string;
   initialDeposit?: number;
   dailyTransferLimit?: number;
+  minimumBalance?: number;
+  nominee?: {
+    name: string;
+    relation: string;
+    phone?: string;
+    nationalId?: string;
+    sharePercent?: number;
+    address?: string;
+  };
+  employmentInfo?: {
+    occupation?: string;
+    employerName?: string;
+    monthlyIncome?: number;
+    sourceOfFunds?: string;
+    taxId?: string;
+  };
+  services?: {
+    debitCardRequested?: boolean;
+    chequeBookRequested?: boolean;
+    smsAlerts?: boolean;
+    eStatement?: boolean;
+  };
+  signatureUrl?: string;
+  kycSnapshot?: {
+    docType?: string;
+    docNumber?: string;
+    verifiedViaOcr?: boolean;
+    ocrConfidence?: number;
+    docFrontUrl?: string;
+    docBackUrl?: string;
+  };
 }
 
 export const accountsApi = apiSlice.injectEndpoints({
@@ -59,7 +101,7 @@ export const accountsApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Account", "Customer", "Dashboard"],
+      invalidatesTags: ["Account", "Customer", "Dashboard", "Auth"],
     }),
 
     updateAccountStatus: builder.mutation<
