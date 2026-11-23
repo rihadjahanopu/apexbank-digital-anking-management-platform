@@ -11,6 +11,7 @@ import {
   Check,
   XCircle,
   AlertTriangle,
+  PlusCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
@@ -105,8 +106,18 @@ export default function CustomerAccountsPage() {
           </div>
 
           <div className="flex items-center gap-2.5">
+            <Link href="/customer/accounts/open">
+              <Button
+                size="sm"
+                variant="primary"
+                className="bg-cyan-600 hover:bg-cyan-700 text-white"
+                leftIcon={<PlusCircle className="h-4 w-4" />}
+              >
+                Open New Account
+              </Button>
+            </Link>
             <Link href="/customer/transfer">
-              <Button size="sm" leftIcon={<ArrowLeftRight className="h-4 w-4" />}>
+              <Button size="sm" variant="outline" leftIcon={<ArrowLeftRight className="h-4 w-4" />}>
                 Transfer Funds
               </Button>
             </Link>
@@ -157,7 +168,9 @@ export default function CustomerAccountsPage() {
                         size="sm"
                         dot
                       >
-                        {acc.status}
+                        {acc.status === ACCOUNT_STATUS.PENDING
+                          ? "Pending Staff Review"
+                          : acc.status}
                       </Badge>
                     </div>
                   </CardHeader>
