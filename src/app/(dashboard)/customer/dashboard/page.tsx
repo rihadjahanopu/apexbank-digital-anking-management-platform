@@ -12,6 +12,7 @@ import {
   Building,
   Landmark,
   ShieldCheck,
+  Clock,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -48,6 +49,9 @@ import { ROLES, ACCOUNT_STATUS } from "@/lib/constants";
 export default function CustomerDashboardPage() {
   const { data } = useGetCustomerDashboardQuery();
   const dashboard = data?.data;
+  const pendingAccounts = (dashboard?.accounts || []).filter(
+    (a) => a.status === ACCOUNT_STATUS.PENDING
+  );
 
   return (
     <DashboardLayout allowedRoles={[ROLES.CUSTOMER, ROLES.ADMIN, ROLES.STAFF]}>
@@ -89,6 +93,23 @@ export default function CustomerDashboardPage() {
             </Link>
           </div>
         </div>
+
+        {/* Pending Review Alert Banner for Customers */}
+        {pendingAccounts.length > 0 && (
+          <div className="rounded-2xl border border-amber-300 bg-amber-50/80 p-4 dark:border-amber-900/60 dark:bg-amber-950/30 flex items-start gap-3.5 shadow-xs">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white shadow-xs">
+              <Clock className="h-5 w-5 animate-pulse" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-amber-950 dark:text-amber-200">
+                Bank Account Application Under Review ({pendingAccounts.length})
+              </h3>
+              <p className="text-xs text-amber-800 dark:text-amber-300 mt-1 leading-relaxed">
+                Your account application for #{pendingAccounts[0]?.accountNumber} is currently queued for verification by a bank officer. Outgoing transfers and debit card facilities will be unlocked once approved.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Balance KPI Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -141,54 +162,73 @@ export default function CustomerDashboardPage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {(dashboard?.accounts || []).map((acc) => (
-              <Card
-                key={acc._id}
-                className="p-5 border-slate-200/90 dark:border-slate-800 bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400">
-                      <Building className="h-4 w-4" />
+          {(dashboard?.accounts || []).length === 0 ? (
+            <Card className="p-8 border-dashed border-slate-300 dark:border-slate-800 text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400 mb-3">
+                <Building className="h-6 w-6" />
+              </div>
+              <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                No Depository Accounts Linked
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
+                Open your first smart depository account with OCR identity verification and initial deposit to start sending money, earning interest, and managing cards.
+              </p>
+              <div className="mt-4">
+                <Link href="/customer/accounts/open">
+                  <Button size="sm">Open Bank Account Now</Button>
+                </Link>
+              </div>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {dashboard?.accounts.map((acc) => (
+                <Card
+                  key={acc._id}
+                  className="p-5 border-slate-200/90 dark:border-slate-800 bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400">
+                        <Building className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
+                          {acc.accountType}
+                        </span>
+                        <span className="block text-[11px] font-mono text-slate-400">
+                          {maskAccountNumber(acc.accountNumber)}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
-                        {acc.accountType}
-                      </span>
-                      <span className="block text-[11px] font-mono text-slate-400">
-                        {maskAccountNumber(acc.accountNumber)}
-                      </span>
-                    </div>
+                    <Badge
+                      variant={
+                        acc.status === ACCOUNT_STATUS.ACTIVE
+                          ? "success"
+                          : "warning"
+                      }
+                      size="sm"
+                      dot
+                    >
+                      {acc.status}
+                    </Badge>
                   </div>
-                  <Badge
-                    variant={
-                      acc.status === ACCOUNT_STATUS.ACTIVE
-                        ? "success"
-                        : "warning"
-                    }
-                    size="sm"
-                    dot
-                  >
-                    {acc.status}
-                  </Badge>
-                </div>
 
-                <div className="mt-4">
-                  <span className="text-[10px] text-slate-400 uppercase font-semibold">
-                    Current Balance
-                  </span>
-                  <div className="text-xl font-bold text-slate-900 dark:text-slate-100">
-                    {formatCurrency(acc.balance)}
+                  <div className="mt-4">
+                    <span className="text-[10px] text-slate-400 uppercase font-semibold">
+                      Current Balance
+                    </span>
+                    <div className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                      {formatCurrency(acc.balance)}
+                    </div>
+                    <div className="mt-1 flex items-center justify-between text-[11px] text-slate-500">
+                      <span>Available: {formatCurrency(acc.availableBalance)}</span>
+                      <span>Min: {formatCurrency(acc.minimumBalance)}</span>
+                    </div>
                   </div>
-                  <div className="mt-1 flex items-center justify-between text-[11px] text-slate-500">
-                    <span>Available: {formatCurrency(acc.availableBalance)}</span>
-                    <span>Min: {formatCurrency(acc.minimumBalance)}</span>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Charts & Activity */}
