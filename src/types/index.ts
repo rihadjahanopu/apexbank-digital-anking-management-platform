@@ -62,8 +62,42 @@ export interface IUser {
   twoFactorEnabled?: boolean;
   kycDocuments?: IKycDocument[];
   avatarUrl?: string;
+  hasAccount?: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface INominee {
+  name: string;
+  relation: string;
+  phone?: string;
+  nationalId?: string;
+  sharePercent: number;
+  address?: string;
+}
+
+export interface IEmploymentInfo {
+  occupation?: string;
+  employerName?: string;
+  monthlyIncome?: number;
+  sourceOfFunds?: string;
+  taxId?: string;
+}
+
+export interface IAccountServices {
+  debitCardRequested: boolean;
+  chequeBookRequested: boolean;
+  smsAlerts: boolean;
+  eStatement: boolean;
+}
+
+export interface IKycSnapshot {
+  docType?: string;
+  docNumber?: string;
+  verifiedViaOcr?: boolean;
+  ocrConfidence?: number;
+  docFrontUrl?: string;
+  docBackUrl?: string;
 }
 
 export interface IBankAccount {
@@ -74,9 +108,18 @@ export interface IBankAccount {
   balance: number;
   availableBalance: number;
   currency: string;
+  branchName?: string;
+  routingNumber?: string;
+  swiftBic?: string;
+  iban?: string;
   userId: string | IUser;
   dailyTransferLimit: number;
   minimumBalance: number;
+  nominee?: INominee;
+  employmentInfo?: IEmploymentInfo;
+  services?: IAccountServices;
+  signatureUrl?: string;
+  kycSnapshot?: IKycSnapshot;
   createdAt: string;
   updatedAt: string;
 }
