@@ -224,6 +224,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: <LayoutDashboard className="h-4 w-4" />,
     },
     {
+      label: "Open Bank Account",
+      href: "/customer/accounts/open",
+      icon: <PlusCircle className="h-4 w-4" />,
+    },
+    {
       label: "My Accounts",
       href: "/customer/accounts",
       icon: <Wallet className="h-4 w-4" />,
