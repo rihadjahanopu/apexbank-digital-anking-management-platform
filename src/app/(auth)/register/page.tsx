@@ -13,7 +13,6 @@ import {
   Phone,
   FileText,
   MapPin,
-  ShieldAlert,
 } from "lucide-react";
 import { toast } from "sonner";
 import { registerSchema, RegisterInput } from "@/lib/validations/auth";
@@ -50,12 +49,13 @@ export default function RegisterPage() {
       dispatch(
         setCredentials({ user: response.user, token: response.token })
       );
-      toast.success(response.message || "Account created successfully!");
 
       if (response.user.role === ROLES.ADMIN) {
+        toast.success(response.message || "Admin account created successfully!");
         router.push("/admin/dashboard");
       } else {
-        router.push("/customer/dashboard");
+        toast.success("Registration successful! Please complete your bank account opening and initial deposit.");
+        router.push("/customer/accounts/open");
       }
     } catch (err: unknown) {
       const apiErr = err as { data?: { error?: string } };
@@ -83,17 +83,8 @@ export default function RegisterPage() {
             Open a Digital Banking Account
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Instantly establish your verified digital profile and primary savings account.
+            Create your verified credentials to open and manage your digital banking accounts.
           </p>
-        </div>
-
-        {/* Security / System Notice */}
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-3.5 dark:border-emerald-900/60 dark:bg-emerald-950/30 flex items-start gap-3">
-          <ShieldAlert className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-          <div className="text-xs text-emerald-900 dark:text-emerald-300">
-            <span className="font-bold">Automated Governance Protocol:</span> The first
-            account created on a fresh database is provisioned with System Administrator clearance. Subsequent users receive Customer self-service accounts with automatic savings provisioning.
-          </div>
         </div>
 
         {/* Registration Card */}
