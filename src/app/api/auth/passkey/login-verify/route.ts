@@ -6,7 +6,8 @@ import { User } from "@/models/User";
 import { Passkey } from "@/models/Passkey";
 import { AuditLog } from "@/models/AuditLog";
 import { signToken } from "@/lib/auth";
-import { USER_STATUS } from "@/lib/constants";
+import { USER_STATUS, ROLES, ACCOUNT_STATUS } from "@/lib/constants";
+import { BankAccount } from "@/models/BankAccount";
 import { getRelyingPartyConfig } from "@/lib/passkey";
 
 export async function POST(req: Request) {
@@ -111,6 +112,12 @@ export async function POST(req: Request) {
       },
     });
 
+    const accountCount = await BankAccount.countDocuments({
+      userId: user._id,
+      status: { $ne: ACCOUNT_STATUS.CLOSED },
+    });
+    const hasAccount = user.role !== ROLES.CUSTOMER || accountCount > 0;
+
     const userResponse = {
       _id: user._id.toString(),
       name: user.name,
@@ -124,6 +131,7 @@ export async function POST(req: Request) {
       isVerified: user.isVerified,
       twoFactorEnabled: user.twoFactorEnabled,
       avatarUrl: user.avatarUrl,
+      hasAccount,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
     };
