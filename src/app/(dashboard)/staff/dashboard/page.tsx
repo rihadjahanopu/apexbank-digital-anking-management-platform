@@ -56,7 +56,7 @@ export default function StaffDashboardPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             <Link href="/staff/customers/register">
               <Button size="sm" leftIcon={<UserPlus className="h-4 w-4" />}>
                 Onboard Customer
