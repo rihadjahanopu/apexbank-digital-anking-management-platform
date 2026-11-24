@@ -229,13 +229,27 @@ export default function StaffKycPage() {
 
               {/* Document Image Viewer */}
               <div className="max-h-80 overflow-auto rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center p-2 bg-slate-950">
-                {activeDoc.docUrl.startsWith("data:image") ? (
+                {(activeDoc.docUrl.startsWith("data:image") ||
+                  activeDoc.docUrl.startsWith("https://res.cloudinary.com")) ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     src={activeDoc.docUrl}
                     alt="Document Scan"
                     className="max-h-72 object-contain rounded-lg shadow-lg"
                   />
+                ) : activeDoc.docUrl.startsWith("https://") ? (
+                  <div className="text-center py-8 text-slate-400 text-xs space-y-2">
+                    <FileText className="h-10 w-10 mx-auto text-indigo-400" />
+                    <p>PDF stored in cloud storage</p>
+                    <a
+                      href={activeDoc.docUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 font-semibold"
+                    >
+                      <Eye className="h-3.5 w-3.5" /> Open Document
+                    </a>
+                  </div>
                 ) : (
                   <div className="text-center py-12 text-slate-400 text-xs">
                     <FileText className="h-10 w-10 mx-auto mb-2 text-indigo-400" />
