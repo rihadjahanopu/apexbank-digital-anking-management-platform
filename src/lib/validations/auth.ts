@@ -54,6 +54,8 @@ export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 
 export const setPinSchema = z
   .object({
+    currentPin: z.string().optional(),
+    currentPassword: z.string().optional(),
     pin: z
       .string()
       .length(4, "PIN must be exactly 4 digits")
