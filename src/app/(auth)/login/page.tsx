@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Building2,
+  Landmark,
   Lock,
   Mail,
   ShieldCheck,
@@ -14,6 +14,8 @@ import {
   Users,
   KeyRound,
   Fingerprint,
+  ArrowRight,
+  ShieldAlert,
 } from "lucide-react";
 import { toast } from "sonner";
 import { loginSchema, LoginInput } from "@/lib/validations/auth";
@@ -21,7 +23,7 @@ import { useLoginMutation } from "@/redux/api/authApi";
 import { useLogin2faMutation } from "@/redux/api/twoFactorApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { setCredentials } from "@/redux/slices/authSlice";
-import { Button, Input, Card, CardContent } from "@/components/ui";
+import { Input } from "@/components/ui";
 import { ROLES } from "@/lib/constants";
 
 export default function LoginPage() {
@@ -52,11 +54,11 @@ export default function LoginPage() {
     try {
       const response = await loginMutation(data).unwrap();
 
-      if ((response as unknown as { requireTwoFactor?: boolean; tempToken?: string }).requireTwoFactor) {
-        const resp2fa = response as unknown as { tempToken: string };
+      const resp2fa = response as unknown as { requireTwoFactor?: boolean; tempToken?: string };
+      if (resp2fa.requireTwoFactor && resp2fa.tempToken) {
         setRequireTwoFactor(true);
         setTempToken(resp2fa.tempToken);
-        toast.info("Two-Factor Authentication required. Enter your 6-digit code.");
+        toast.info("Two-factor authentication required. Please enter your 6-digit TOTP code.");
         return;
       }
 
@@ -65,7 +67,6 @@ export default function LoginPage() {
       );
       toast.success(response.message || "Logged in successfully!");
 
-      // Role-based routing
       if (response.user.role === ROLES.ADMIN) {
         router.push("/admin/dashboard");
       } else if (response.user.role === ROLES.STAFF) {
@@ -80,14 +81,14 @@ export default function LoginPage() {
       }
     } catch (err: unknown) {
       const apiErr = err as { data?: { error?: string } };
-      toast.error(apiErr.data?.error || "Login failed. Please verify credentials.");
+      toast.error(apiErr.data?.error || "Login failed. Please check your credentials.");
     }
   };
 
   const on2faSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!totpCode || totpCode.trim().length !== 6) {
-      toast.error("Please enter a valid 6-digit authenticator code.");
+    if (!totpCode || totpCode.length !== 6) {
+      toast.error("Please enter a valid 6-digit code.");
       return;
     }
 
@@ -100,7 +101,7 @@ export default function LoginPage() {
       dispatch(
         setCredentials({ user: response.user, token: response.token })
       );
-      toast.success(response.message || "Logged in successfully!");
+      toast.success(response.message || "2FA verification successful!");
 
       if (response.user.role === ROLES.ADMIN) {
         router.push("/admin/dashboard");
@@ -164,7 +165,6 @@ export default function LoginPage() {
         return;
       }
 
-      // 1. Get authentication options from server
       const optRes = await fetch("/api/auth/passkey/login-options", {
         method: "POST",
         credentials: "include",
@@ -175,12 +175,10 @@ export default function LoginPage() {
         return;
       }
 
-      // 2. Perform native WebAuthn authentication prompt via @simplewebauthn/browser
       const credential = await startAuthentication({
         optionsJSON: optData.options,
       });
 
-      // 3. Verify assertion with server
       const verifyRes = await fetch("/api/auth/passkey/login-verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -193,7 +191,6 @@ export default function LoginPage() {
       const verifyData = await verifyRes.json();
 
       if (!verifyData.success) {
-        // Signal API support check per modern web guidance
         if (
           verifyRes.status === 404 &&
           typeof window !== "undefined" &&
@@ -242,192 +239,216 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4 sm:p-6 lg:p-8">
-      <div className="w-full max-w-md space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#020b08] text-slate-100 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+      {/* Background Ambient Glows */}
+      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-emerald-600/15 rounded-full blur-[140px] animate-pulse-emerald" />
+        <div className="absolute bottom-[5%] -left-[10%] w-[500px] h-[500px] bg-teal-800/10 rounded-full blur-[160px]" />
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `radial-gradient(rgba(52, 211, 153, 0.8) 1px, transparent 1px)`,
+            backgroundSize: "32px 32px",
+          }}
+        />
+      </div>
+
+      <div className="w-full max-w-md space-y-6 relative z-10">
         {/* Header Branding */}
         <div className="text-center space-y-2">
           <Link
             href="/"
-            className="inline-flex items-center gap-2.5 font-bold text-2xl tracking-tight text-slate-900 dark:text-white"
+            className="inline-flex items-center gap-2.5 font-bold text-2xl tracking-tight text-white group"
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
-              <Building2 className="h-6 w-6" />
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-tr from-emerald-600 to-teal-400 text-slate-950 shadow-lg shadow-emerald-500/25 border border-emerald-300/30 group-hover:scale-105 transition-transform">
+              <Landmark className="h-6 w-6 text-slate-950" />
             </div>
             <span>
-              Apex<span className="text-indigo-600 dark:text-indigo-400">Bank</span>
+              Apex<span className="text-emerald-400">Bank</span>
+            </span>
+            <span className="rounded-full bg-emerald-950 border border-emerald-500/30 px-2 py-0.5 text-[9px] font-semibold text-emerald-300 uppercase tracking-wider">
+              Reserve
             </span>
           </Link>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            Welcome to Secure Banking
+          <h2 className="text-xl font-bold tracking-tight text-white">
+            Client Portal Sign In
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Sign in to access your digital accounts and banking services.
+          <p className="text-xs text-slate-400">
+            Access your multi-currency vaults and institutional banking services.
           </p>
         </div>
 
-        {/* Demo Role Selector Bar */}
+        {/* 1-Click Demo Logins Bar */}
         {!requireTwoFactor && (
-          <div className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-3.5 dark:border-indigo-950/80 dark:bg-indigo-950/30">
+          <div className="glass-forest-pill rounded-2xl p-3.5 border border-emerald-500/20 backdrop-blur-xl">
             <div className="flex items-center justify-between pb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
-                <KeyRound className="h-3.5 w-3.5" />
-                1-Click Demo Logins
+              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5 font-mono">
+                <KeyRound className="h-3 w-3 text-emerald-400" />
+                1-Click Demo Credentials
               </span>
               <button
+                type="button"
                 onClick={handleSeedDatabase}
                 disabled={autoSeeding}
-                className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline font-medium disabled:opacity-50"
+                className="text-[10px] text-teal-400 hover:text-teal-300 hover:underline font-mono disabled:opacity-50"
               >
-                {autoSeeding ? "Seeding..." : "Init / Reset Demo DB"}
+                {autoSeeding ? "Seeding..." : "Init / Reset DB"}
               </button>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => fillDemoCredentials("admin")}
-                className="flex items-center justify-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 transition-colors"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1.5 text-xs font-semibold text-emerald-200 hover:bg-emerald-900/80 hover:text-white transition-colors"
               >
-                <ShieldCheck className="h-3.5 w-3.5 text-indigo-600" />
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
                 Admin
               </button>
               <button
                 type="button"
                 onClick={() => fillDemoCredentials("staff")}
-                className="flex items-center justify-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 transition-colors"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-teal-950/70 border border-teal-500/30 px-2.5 py-1.5 text-xs font-semibold text-teal-200 hover:bg-teal-900/80 hover:text-white transition-colors"
               >
-                <Users className="h-3.5 w-3.5 text-sky-600" />
+                <Users className="h-3.5 w-3.5 text-teal-400" />
                 Staff
               </button>
               <button
                 type="button"
                 onClick={() => fillDemoCredentials("customer")}
-                className="flex items-center justify-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 transition-colors"
+                className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1.5 text-xs font-semibold text-emerald-200 hover:bg-emerald-900/80 hover:text-white transition-colors"
               >
-                <UserCheck className="h-3.5 w-3.5 text-emerald-600" />
+                <UserCheck className="h-3.5 w-3.5 text-emerald-300" />
                 Customer
               </button>
             </div>
           </div>
         )}
 
-        {/* Login or 2FA Card */}
-        {requireTwoFactor ? (
-          <Card className="shadow-lg border-slate-200/90 dark:border-slate-800">
-            <CardContent className="p-6 pt-6">
-              <form onSubmit={on2faSubmit} className="space-y-4">
-                <div className="text-center space-y-1 pb-2">
-                  <div className="mx-auto w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center mb-2">
-                    <ShieldCheck className="h-6 w-6" />
-                  </div>
-                  <h3 className="font-bold text-base text-slate-900 dark:text-slate-100">
-                    Two-Factor Verification
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    Enter the 6-digit verification code generated by your Authenticator app.
-                  </p>
+        {/* Glass Card: Form Area */}
+        <div className="glass-forest-card rounded-3xl p-6 sm:p-7 border border-emerald-500/25 shadow-2xl backdrop-blur-2xl">
+          {requireTwoFactor ? (
+            <form onSubmit={on2faSubmit} className="space-y-4">
+              <div className="text-center space-y-1 pb-2">
+                <div className="mx-auto w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-2 border border-emerald-400/30">
+                  <ShieldAlert className="h-6 w-6" />
                 </div>
+                <h3 className="font-bold text-base text-white">
+                  Two-Factor Verification
+                </h3>
+                <p className="text-xs text-slate-400">
+                  Enter the 6-digit TOTP code generated by your Authenticator app.
+                </p>
+              </div>
 
-                <Input
-                  label="6-Digit TOTP Code"
+              <div className="space-y-1.5">
+                <label className="block text-xs font-mono uppercase text-slate-300">
+                  6-Digit Verification Code
+                </label>
+                <input
                   type="text"
                   maxLength={6}
                   placeholder="000000"
                   value={totpCode}
                   onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, ""))}
-                  className="text-center font-mono text-xl tracking-widest font-bold"
+                  className="w-full text-center font-mono text-2xl tracking-[0.3em] font-bold rounded-2xl bg-[#020e09] border border-emerald-500/40 px-4 py-3 text-emerald-300 focus:outline-hidden focus:border-emerald-400"
                   required
                   autoFocus
                 />
+              </div>
 
-                <Button
-                  type="submit"
-                  className="w-full mt-2"
-                  size="lg"
-                  isLoading={isVerifying2fa}
-                >
-                  Verify & Complete Sign In
-                </Button>
+              <button
+                type="submit"
+                disabled={isVerifying2fa}
+                className="w-full mt-2 py-3.5 rounded-xl bg-linear-to-r from-emerald-500 via-teal-400 to-emerald-600 text-slate-950 font-bold text-xs uppercase tracking-wider hover:brightness-110 active:scale-98 transition-all disabled:opacity-50"
+              >
+                {isVerifying2fa ? "Verifying Token..." : "Verify & Complete Sign In"}
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setRequireTwoFactor(false);
-                    setTotpCode("");
-                  }}
-                  className="w-full text-center text-xs text-slate-400 hover:text-slate-200 mt-2 block"
-                >
-                  ← Back to Email & Password
-                </button>
-              </form>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="shadow-lg border-slate-200/90 dark:border-slate-800">
-            <CardContent className="p-6 pt-6">
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <Input
-                  label="Email Address"
-                  type="email"
-                  placeholder="name@apexbank.com"
-                  leftIcon={<Mail className="h-4 w-4" />}
-                  error={errors.email?.message}
-                  {...register("email")}
-                />
+              <button
+                type="button"
+                onClick={() => {
+                  setRequireTwoFactor(false);
+                  setTotpCode("");
+                }}
+                className="w-full text-center text-xs text-slate-400 hover:text-emerald-300 mt-2 block"
+              >
+                ← Return to Email & Password
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <Input
+                label="Email Address"
+                type="email"
+                placeholder="client@apexbank.com"
+                leftIcon={<Mail className="h-4 w-4 text-emerald-400" />}
+                error={errors.email?.message}
+                {...register("email")}
+              />
 
-                <Input
-                  label="Password"
-                  type="password"
-                  placeholder="••••••••••••"
-                  leftIcon={<Lock className="h-4 w-4" />}
-                  error={errors.password?.message}
-                  {...register("password")}
-                />
+              <Input
+                label="Master Password"
+                type="password"
+                placeholder="••••••••••••"
+                leftIcon={<Lock className="h-4 w-4 text-emerald-400" />}
+                error={errors.password?.message}
+                {...register("password")}
+              />
 
-                <Button
-                  type="submit"
-                  className="w-full mt-2"
-                  size="lg"
-                  isLoading={isLoading}
-                >
-                  Sign In to Banking Portal
-                </Button>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full mt-2 py-3.5 rounded-xl bg-linear-to-r from-emerald-500 via-teal-400 to-emerald-600 text-slate-950 font-bold text-xs uppercase tracking-wider hover:brightness-110 active:scale-98 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+              >
+                <span>{isLoading ? "Authenticating..." : "Sign In to Banking Portal"}</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
 
-                <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-slate-200 dark:border-slate-800" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white dark:bg-slate-900 px-2 text-slate-400">
-                      Or passwordless login
-                    </span>
-                  </div>
+              {/* Passwordless Passkey Divider */}
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-emerald-950" />
                 </div>
+                <div className="relative flex justify-center text-[10px] uppercase font-mono">
+                  <span className="bg-[#041a12] px-3 py-0.5 rounded-full text-emerald-400/80 border border-emerald-500/20">
+                    Or Passwordless WebAuthn
+                  </span>
+                </div>
+              </div>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  className="w-full border-indigo-200 dark:border-indigo-900 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40"
-                  leftIcon={<Fingerprint className="h-5 w-5 text-indigo-500" />}
-                  isLoading={isPasskeyLoading}
-                  onClick={handlePasskeySignIn}
-                >
-                  Sign In with Passkey / Biometrics
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        )}
+              {/* Biometric Passkey Button */}
+              <button
+                type="button"
+                onClick={handlePasskeySignIn}
+                disabled={isPasskeyLoading}
+                className="w-full py-3 rounded-xl border border-emerald-500/30 bg-emerald-950/40 text-emerald-200 hover:bg-emerald-900/60 hover:text-white transition-all flex items-center justify-center gap-2 text-xs font-semibold"
+              >
+                <Fingerprint className="h-4 w-4 text-emerald-400" />
+                <span>
+                  {isPasskeyLoading ? "Reading Biometrics..." : "Sign In with Biometric Passkey"}
+                </span>
+              </button>
+            </form>
+          )}
+        </div>
 
-        {/* Footer Links */}
-        <div className="text-center text-xs text-slate-500 dark:text-slate-400">
-          Don&apos;t have an account yet?{" "}
-          <Link
-            href="/register"
-            className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
-          >
-            Open an Account
-          </Link>
+        {/* Footer Redirect & Trust Badges */}
+        <div className="space-y-4 text-center">
+          <p className="text-xs text-slate-400">
+            Don&apos;t have an account yet?{" "}
+            <Link
+              href="/register"
+              className="font-semibold text-emerald-400 hover:text-emerald-300 underline underline-offset-4"
+            >
+              Open a Verified Account
+            </Link>
+          </p>
+
+          <div className="flex items-center justify-center gap-4 text-[10px] text-slate-500 font-mono">
+            <span>✓ Member FDIC</span>
+            <span>✓ 256-Bit SSL</span>
+            <span>✓ FIDO2 Certified</span>
+          </div>
         </div>
       </div>
     </div>
