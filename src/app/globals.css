@@ -5,7 +5,7 @@
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
-  --primary: #4f46e5;
+  --primary: #059669;
   --primary-foreground: #ffffff;
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
@@ -14,15 +14,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #090d16;
+    --background: #030c08;
     --foreground: #f8fafc;
-    --card: #0f172a;
+    --card: #051a12;
     --card-foreground: #f8fafc;
-    --primary: #6366f1;
+    --primary: #10b981;
     --primary-foreground: #ffffff;
-    --muted: #1e293b;
+    --muted: #0d2a1f;
     --muted-foreground: #94a3b8;
-    --border: #1e293b;
+    --border: #133a2c;
   }
 }
 
@@ -37,12 +37,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
+  background: rgba(16, 185, 129, 0.25);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
+  background: rgba(16, 185, 129, 0.45);
 }
 
 /* Fintech card glass styling */
@@ -53,7 +53,139 @@
 }
 
 .dark .fintech-card {
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba(5, 26, 18, 0.75);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+/* Glassy Forest Custom Animations & Utilities */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+@keyframes float-reverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(8px) rotate(-0.5deg);
+  }
+}
+
+@keyframes pulse-emerald {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 7s ease-in-out infinite;
+}
+
+.animate-pulse-emerald {
+  animation: pulse-emerald 8s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s infinite;
+}
+
+/* 3D Transform Utilities for Metal Bank Card */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Glass Forest Theme Styling */
+.glass-forest-base {
+  background: radial-gradient(circle at 50% 0%, #08291d 0%, #03130d 50%, #010805 100%);
+}
+
+.glass-forest-card {
+  background: linear-gradient(135deg, rgba(10, 42, 31, 0.6) 0%, rgba(4, 20, 14, 0.75) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(52, 211, 153, 0.15);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-forest-card:hover {
+  border-color: rgba(52, 211, 153, 0.3);
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6), 0 0 25px -5px rgba(16, 185, 129, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+}
+
+.glass-forest-pill {
+  background: rgba(6, 32, 23, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
+.glass-forest-nav {
+  background: rgba(3, 19, 13, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(52, 211, 153, 0.12);
+}
+
+.emerald-glow-box {
+  box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.25);
+}
+
+.emerald-glow-text {
+  text-shadow: 0 0 20px rgba(52, 211, 153, 0.5);
 }
