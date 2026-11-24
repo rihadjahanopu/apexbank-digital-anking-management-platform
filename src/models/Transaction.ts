@@ -111,6 +111,17 @@ const TransactionSchema = new Schema<ITransactionDocument>(
   }
 );
 
+// Force re-registration so added enum values (BANGLA_QR_PAYMENT, MOBILE_RECHARGE)
+// are reflected even when Mongoose has a stale cached schema in hot-reload / dev.
+if (mongoose.models.Transaction) {
+  const existing = mongoose.models.Transaction;
+  const enumValues: string[] = (existing.schema.path("type") as { enumValues?: string[] })?.enumValues ?? [];
+  const expected = Object.values(TRANSACTION_TYPES);
+  if (expected.some((v) => !enumValues.includes(v))) {
+    delete mongoose.models.Transaction;
+  }
+}
+
 export const Transaction: Model<ITransactionDocument> =
   mongoose.models.Transaction ||
   mongoose.model<ITransactionDocument>("Transaction", TransactionSchema);
