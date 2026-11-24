@@ -101,6 +101,34 @@ export const staffApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Staff", "Dashboard"],
     }),
+
+    getPinResetRequests: builder.query<
+      {
+        success: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        requests: any[];
+        pendingCount: number;
+      },
+      { status?: string } | void
+    >({
+      query: (params) => ({
+        url: "/staff/pin-reset-requests",
+        params: params || undefined,
+      }),
+      providesTags: ["Staff"],
+    }),
+
+    reviewPinResetRequest: builder.mutation<
+      ApiResponse,
+      { id: string; action: "APPROVE" | "REJECT"; remarks?: string }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `/staff/pin-reset-requests/${id}/review`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Staff", "Auth"],
+    }),
   }),
 });
 
@@ -111,4 +139,6 @@ export const {
   useChangeUserRoleMutation,
   useUpdateStaffMutation,
   useDeleteStaffMutation,
+  useGetPinResetRequestsQuery,
+  useReviewPinResetRequestMutation,
 } = staffApi;
