@@ -27,6 +27,8 @@ import {
   BadgeCheck,
   ShieldAlert,
   Calendar,
+  Clock,
+  HelpCircle,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
@@ -53,6 +55,9 @@ import {
   useSetPinMutation,
   useGetMyPasskeysQuery,
   useDeletePasskeyMutation,
+  useGetMeQuery,
+  useGetMyPinResetRequestQuery,
+  useSubmitPinResetRequestMutation,
 } from "@/redux/api/authApi";
 import {
   useGenerate2faMutation,
@@ -333,21 +338,38 @@ export default function ProfilePage() {
 
     setIsSavingAvatar(true);
     try {
+      let resolvedAvatarUrl = finalAvatar;
+
+      // If it's a local data URL (uploaded photo), upload to Cloudinary
+      if (finalAvatar && finalAvatar.startsWith("data:")) {
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ file: finalAvatar, folder: "avatars" }),
+        });
+        const uploadData = await uploadRes.json();
+        if (!uploadData.success) {
+          throw new Error(uploadData.error || "Failed to upload avatar to Cloudinary.");
+        }
+        resolvedAvatarUrl = uploadData.url;
+      }
+
       const res = await updateProfileMutation({
-        name: user?.name || "User",
-        avatarUrl: finalAvatar,
+        name: currentUser?.name || user?.name || "User",
+        avatarUrl: resolvedAvatarUrl,
       }).unwrap();
 
       if (res.user) {
         dispatch(updateUser(res.user));
       }
+      refetchMe();
       toast.success(
-        finalAvatar ? "Profile avatar updated successfully!" : "Profile photo removed."
+        resolvedAvatarUrl ? "Profile avatar saved to Cloudinary!" : "Profile photo removed."
       );
       setAvatarPreview(null);
     } catch (err: unknown) {
-      const apiErr = err as { data?: { error?: string } };
-      toast.error(apiErr.data?.error || "Failed to update profile photo.");
+      const apiErr = err as { data?: { error?: string }; message?: string };
+      toast.error(apiErr.data?.error || apiErr.message || "Failed to update profile photo.");
     } finally {
       setIsSavingAvatar(false);
     }
@@ -384,6 +406,40 @@ export default function ProfilePage() {
     },
   });
 
+  const { data: meData, refetch: refetchMe } = useGetMeQuery();
+  const currentUser = meData?.user || user;
+  const hasExistingPin = Boolean(currentUser?.transactionPinSet);
+
+  // PIN Reset Request State
+  const { data: pinRequestData, refetch: refetchPinRequest } = useGetMyPinResetRequestQuery();
+  const [submitPinResetMutation, { isLoading: isSubmittingPinReset }] =
+    useSubmitPinResetRequestMutation();
+  const [isPinResetModalOpen, setIsPinResetModalOpen] = useState(false);
+  const [pinResetReason, setPinResetReason] = useState("");
+  const [pinResetPassword, setPinResetPassword] = useState("");
+
+  const handleRequestPinReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pinResetReason.trim() || pinResetReason.trim().length < 5) {
+      toast.error("Please explain why you need your PIN reset (minimum 5 characters).");
+      return;
+    }
+    try {
+      const res = await submitPinResetMutation({
+        reason: pinResetReason.trim(),
+        password: pinResetPassword.trim() || undefined,
+      }).unwrap();
+      toast.success(res.message || "PIN reset request submitted to bank staff.");
+      setIsPinResetModalOpen(false);
+      setPinResetReason("");
+      setPinResetPassword("");
+      refetchPinRequest();
+    } catch (err: unknown) {
+      const apiErr = err as { data?: { error?: string } };
+      toast.error(apiErr.data?.error || "Failed to submit PIN reset request.");
+    }
+  };
+
   // PIN Form
   const {
     register: registerPin,
@@ -393,6 +449,8 @@ export default function ProfilePage() {
   } = useForm<SetPinInput>({
     resolver: zodResolver(setPinSchema),
     defaultValues: {
+      currentPin: "",
+      currentPassword: "",
       pin: "",
       confirmPin: "",
     },
@@ -425,7 +483,12 @@ export default function ProfilePage() {
   const onSetPin = async (data: SetPinInput) => {
     try {
       const res = await setPinMutation(data).unwrap();
-      toast.success(res.message || "Transaction PIN configured!");
+      toast.success(res.message || "Transaction PIN updated successfully!");
+      if (currentUser) {
+        dispatch(updateUser({ ...currentUser, transactionPinSet: true }));
+      }
+      refetchMe();
+      refetchPinRequest();
       resetPinForm();
     } catch (err: unknown) {
       const apiErr = err as { data?: { error?: string } };
@@ -1067,47 +1130,119 @@ export default function ProfilePage() {
 
           {/* PIN Tab */}
           <TabsContent value="pin">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <KeyRound className="h-5 w-5 text-indigo-500" />
-                  Transaction PIN Configuration
-                </CardTitle>
-                <CardDescription>
-                  Your 4-digit PIN is required to authorize withdrawals, account transfers, and card status adjustments.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form
-                  onSubmit={handlePinSubmit(onSetPin)}
-                  className="space-y-4 max-w-sm"
-                >
-                  <Input
-                    label="4-Digit PIN"
-                    type="password"
-                    maxLength={4}
-                    placeholder="••••"
-                    leftIcon={<Lock className="h-4 w-4" />}
-                    error={pinErrors.pin?.message}
-                    {...registerPin("pin")}
-                  />
+            <div className="space-y-4">
+              {/* Informational Banner: Pending Staff Review */}
+              {pinRequestData?.request?.status === "PENDING" && (
+                <div className="p-4 rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50/70 dark:bg-amber-950/30 flex items-start gap-3">
+                  <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5 animate-pulse" />
+                  <div className="text-xs text-amber-900 dark:text-amber-200">
+                    <p className="font-semibold text-sm">PIN Reset Request Under Staff Review</p>
+                    <p className="mt-1 text-slate-700 dark:text-slate-300 leading-relaxed">
+                      Your PIN reset request was submitted on {formatDate(pinRequestData.request.createdAt)}.
+                      Reason: &quot;{pinRequestData.request.reason}&quot;.
+                    </p>
+                    <p className="mt-1 text-[11px] text-amber-700 dark:text-amber-400 font-medium">
+                      Bank officers are verifying your customer record. Once approved, your transaction PIN will be cleared so you can setup a new PIN immediately.
+                    </p>
+                  </div>
+                </div>
+              )}
 
-                  <Input
-                    label="Confirm 4-Digit PIN"
-                    type="password"
-                    maxLength={4}
-                    placeholder="••••"
-                    leftIcon={<Lock className="h-4 w-4" />}
-                    error={pinErrors.confirmPin?.message}
-                    {...registerPin("confirmPin")}
-                  />
+              {/* Informational Banner: Recently Approved by Staff */}
+              {pinRequestData?.request?.status === "APPROVED" && !hasExistingPin && (
+                <div className="p-4 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50/70 dark:bg-emerald-950/30 flex items-start gap-3">
+                  <Check className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                  <div className="text-xs text-emerald-900 dark:text-emerald-200">
+                    <p className="font-semibold text-sm">PIN Reset Approved by Bank Staff</p>
+                    <p className="mt-1 text-slate-700 dark:text-slate-300">
+                      {pinRequestData.request.adminRemarks || "Your transaction PIN has been cleared. Please setup your new 4-digit PIN below."}
+                    </p>
+                  </div>
+                </div>
+              )}
 
-                  <Button type="submit" isLoading={isSettingPin}>
-                    Save Transaction PIN
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <KeyRound className="h-5 w-5 text-indigo-500" />
+                      {hasExistingPin ? "Change Transaction PIN" : "Setup Transaction PIN"}
+                    </CardTitle>
+                    <Badge variant={hasExistingPin ? "success" : "warning"} size="sm">
+                      {hasExistingPin ? "PIN Active & Secured" : "Not Configured"}
+                    </Badge>
+                  </div>
+                  <CardDescription>
+                    {hasExistingPin
+                      ? "Enter your current PIN (or account password) to verify your authorization before setting a new 4-digit PIN."
+                      : "Create a confidential 4-digit PIN to authorize money transfers, Bangla QR payments, and mobile recharges."}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form
+                    onSubmit={handlePinSubmit(onSetPin)}
+                    className="space-y-4 max-w-sm"
+                  >
+                    {hasExistingPin && (
+                      <div className="space-y-1.5">
+                        <Input
+                          label="Current 4-Digit PIN (or Account Password)"
+                          type="password"
+                          placeholder="•••• or current password"
+                          leftIcon={<Lock className="h-4 w-4" />}
+                          error={pinErrors.currentPin?.message}
+                          {...registerPin("currentPin")}
+                          required
+                        />
+                        <div className="flex items-center justify-between pt-0.5">
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                            Current PIN or account password verifies authorization.
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPinResetReason("");
+                              setPinResetPassword("");
+                              setIsPinResetModalOpen(true);
+                            }}
+                            className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1"
+                          >
+                            <HelpCircle className="h-3 w-3" />
+                            Forgot PIN? Request Reset
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    <Input
+                      label={hasExistingPin ? "New 4-Digit PIN" : "4-Digit PIN"}
+                      type="password"
+                      maxLength={4}
+                      placeholder="••••"
+                      leftIcon={<Lock className="h-4 w-4" />}
+                      error={pinErrors.pin?.message}
+                      {...registerPin("pin")}
+                      required
+                    />
+
+                    <Input
+                      label={hasExistingPin ? "Confirm New 4-Digit PIN" : "Confirm 4-Digit PIN"}
+                      type="password"
+                      maxLength={4}
+                      placeholder="••••"
+                      leftIcon={<Lock className="h-4 w-4" />}
+                      error={pinErrors.confirmPin?.message}
+                      {...registerPin("confirmPin")}
+                      required
+                    />
+
+                    <Button type="submit" isLoading={isSettingPin}>
+                      {hasExistingPin ? "Update Transaction PIN" : "Save Transaction PIN"}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
 
@@ -1277,6 +1412,69 @@ export default function ProfilePage() {
                 leftIcon={<Fingerprint className="h-4 w-4" />}
               >
                 {isRegisteringPasskey ? "Waiting for Biometric..." : "Scan & Save Passkey"}
+              </Button>
+            </div>
+          </form>
+        </Modal>
+
+        {/* Modal: Request PIN Reset */}
+        <Modal
+          isOpen={isPinResetModalOpen}
+          onClose={() => setIsPinResetModalOpen(false)}
+          title="Request Transaction PIN Reset"
+          description="Submit an official request to bank staff to review and clear your transaction PIN."
+        >
+          <form onSubmit={handleRequestPinReset} className="space-y-4 pt-2">
+            <div className="p-3.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 flex items-start gap-3">
+              <KeyRound className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              <div className="text-xs text-amber-950 dark:text-amber-200">
+                <p className="font-semibold mb-0.5">Staff Security Clearance Required</p>
+                <p className="text-[11px] text-amber-800 dark:text-amber-300 leading-relaxed">
+                  For your financial protection, bank staff will review your request against your registered depository records. Once approved, you can immediately configure a new 4-digit PIN.
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Reason for Reset Request <span className="text-rose-500">*</span>
+              </label>
+              <textarea
+                rows={3}
+                value={pinResetReason}
+                onChange={(e) => setPinResetReason(e.target.value)}
+                placeholder="e.g. Forgot current PIN after device reset, or locked out."
+                className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+              />
+            </div>
+
+            <Input
+              label="Account Password (Optional verification)"
+              type="password"
+              placeholder="••••••••••••"
+              value={pinResetPassword}
+              onChange={(e) => setPinResetPassword(e.target.value)}
+              helperText="Enter your login password to speed up officer verification."
+            />
+
+            <div className="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+              <Button
+                variant="outline"
+                size="sm"
+                type="button"
+                onClick={() => setIsPinResetModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                variant="primary"
+                type="submit"
+                isLoading={isSubmittingPinReset}
+                leftIcon={<KeyRound className="h-4 w-4" />}
+              >
+                Submit Request to Staff
               </Button>
             </div>
           </form>
