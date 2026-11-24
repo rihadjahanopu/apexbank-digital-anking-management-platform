@@ -17,24 +17,7 @@ A complete, production-grade digital banking web application built with **Next.j
 npm install
 ```
 
-### 2. Configure Environment
-
-Create `.env.local` in the root directory:
-
-```env
-MONGODB_URI=mongodb://127.0.0.1:27017/bank_app
-JWT_SECRET=apex_digital_banking_super_secret_jwt_key_2026_production_grade
-JWT_EXPIRES_IN=7d
-NEXT_PUBLIC_APP_NAME="Apex Bank"
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# Cloudinary Storage Configuration
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-```
-
-### 3. Start MongoDB
+### 2. Start MongoDB
 
 ```bash
 # Option A: Local MongoDB
@@ -44,7 +27,7 @@ mongod --dbpath /data/db
 docker run -d -p 27017:27017 --name mongo-bank mongo:7
 ```
 
-### 4. Seed the Database
+### 3. Seed the Database
 
 ```bash
 npm run seed
@@ -52,7 +35,7 @@ npm run seed
 
 This creates three demo accounts with pre-configured balances and transaction history.
 
-### 5. Start Development Server
+### 4. Start Development Server
 
 ```bash
 npm run dev
