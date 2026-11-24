@@ -214,24 +214,27 @@ export default function HomePage() {
       </div>
 
       {/* Institutional Top Trust Bar */}
-      <div className="border-b border-emerald-950/80 bg-[#03150e]/90 text-[11px] text-emerald-400/80 py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5 font-medium">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping inline-block" />
+      <div className="border-b border-emerald-950/80 bg-[#03150e]/95 text-[11px] text-emerald-400/80 py-2 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-y-1 gap-x-4">
+          <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 font-medium text-emerald-300">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping inline-block shrink-0" />
               SWIFT Global Settlement: ONLINE (99.999% SLA)
             </span>
-            <span className="hidden sm:inline text-emerald-900">•</span>
+            <span className="hidden sm:inline text-emerald-800">•</span>
             <span className="hidden sm:inline text-slate-400">
               Institution Code: <span className="font-mono text-emerald-300">APEX-US-33</span>
             </span>
           </div>
-          <div className="flex items-center gap-4 text-slate-400">
-            <span className="hidden md:inline flex items-center gap-1">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-              Member FDIC & Regulated Commercial Bank
+          <div className="flex items-center gap-4 text-slate-400 text-right">
+            <span className="hidden md:inline-flex items-center gap-1.5">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+              <span>Member FDIC & Regulated Commercial Bank</span>
             </span>
-            <span className="text-emerald-300 font-mono">24/7 Concierge Desk</span>
+            <span className="text-emerald-300 font-mono flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 inline-block md:hidden shrink-0" />
+              24/7 Concierge Desk
+            </span>
           </div>
         </div>
       </div>
@@ -309,7 +312,7 @@ export default function HomePage() {
               </Link>
             ) : (
               <>
-                <Link href="/login">
+                <Link href="/login" className="hidden sm:inline-block">
                   <button className="rounded-xl border border-emerald-500/30 bg-emerald-950/40 px-4 py-2 text-xs font-medium text-emerald-200 hover:bg-emerald-900/60 hover:text-white transition-all backdrop-blur-md">
                     Sign In
                   </button>
@@ -544,9 +547,9 @@ export default function HomePage() {
             </div>
 
             {/* Right Column: 3D Interactive Metal Bank Card & Live Banking Stream */}
-            <div className="lg:col-span-5 relative flex flex-col items-center">
+            <div className="lg:col-span-5 relative flex flex-col items-center w-full">
               {/* Card Tier Switcher Selector */}
-              <div className="mb-6 flex items-center p-1 rounded-2xl glass-forest-pill border border-emerald-500/20 text-xs">
+              <div className="mb-10 sm:mb-12 flex items-center p-1 rounded-2xl glass-forest-pill border border-emerald-500/20 text-xs shadow-md">
                 {(["emerald", "obsidian", "platinum"] as CardTier[]).map((tier) => (
                   <button
                     key={tier}
@@ -554,7 +557,7 @@ export default function HomePage() {
                       setSelectedCardTier(tier);
                       setIsCardFlipped(false);
                     }}
-                    className={`px-3.5 py-1.5 rounded-xl font-medium transition-all capitalize ${
+                    className={`px-4 sm:px-5 py-1.5 rounded-xl font-medium transition-all capitalize ${
                       selectedCardTier === tier
                         ? "bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
                         : "text-slate-400 hover:text-white"
@@ -565,12 +568,12 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {/* 3D Flippable Bank Card Container */}
-              <div className="w-full max-w-sm sm:max-w-md perspective-1000 relative">
+              {/* 3D Flippable Bank Card Wrapper */}
+              <div className="w-full max-w-sm sm:max-w-md relative">
                 {/* Floating Activity Alert #1 (Incoming Wire) */}
-                <div className="absolute -top-6 -left-4 sm:-left-8 z-20 animate-float">
-                  <div className="glass-forest-card rounded-2xl px-3.5 py-2.5 flex items-center gap-3 border border-emerald-400/30 shadow-xl backdrop-blur-2xl">
-                    <div className="h-8 w-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                <div className="absolute -top-7 -left-2 sm:-left-6 z-20 animate-float pointer-events-none">
+                  <div className="glass-forest-card rounded-2xl px-3.5 py-2.5 flex items-center gap-3 border border-emerald-400/30 shadow-2xl backdrop-blur-2xl">
+                    <div className="h-8 w-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
                       <ArrowDownLeft className="h-4 w-4" />
                     </div>
                     <div>
@@ -583,9 +586,9 @@ export default function HomePage() {
                 </div>
 
                 {/* Floating Activity Alert #2 (Yield Payout) */}
-                <div className="absolute -bottom-8 -right-4 sm:-right-6 z-20 animate-float-reverse">
-                  <div className="glass-forest-card rounded-2xl px-3.5 py-2.5 flex items-center gap-3 border border-emerald-400/30 shadow-xl backdrop-blur-2xl">
-                    <div className="h-8 w-8 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center">
+                <div className="absolute -bottom-5 -right-2 sm:-right-6 z-20 animate-float-reverse pointer-events-none">
+                  <div className="glass-forest-card rounded-2xl px-3.5 py-2.5 flex items-center gap-3 border border-emerald-400/30 shadow-2xl backdrop-blur-2xl">
+                    <div className="h-8 w-8 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
                       <Sparkles className="h-4 w-4" />
                     </div>
                     <div>
@@ -643,18 +646,18 @@ export default function HomePage() {
 
                     {/* Middle: Embossed Masked Card Number */}
                     <div className="relative z-10 my-auto">
-                      <div className="font-mono text-lg sm:text-xl tracking-[0.25em] text-white/95 font-semibold drop-shadow-md">
+                      <div className="font-mono text-base sm:text-xl tracking-[0.2em] sm:tracking-[0.25em] text-white/95 font-semibold drop-shadow-md">
                         4929 •••• •••• 8829
                       </div>
                     </div>
 
                     {/* Bottom: Cardholder, Expiry, VISA/Mastercard Hologram */}
                     <div className="flex items-end justify-between relative z-10 pt-2">
-                      <div>
+                      <div className="max-w-[55%]">
                         <div className="text-[8px] uppercase tracking-widest text-white/50 font-mono">
                           CARDHOLDER
                         </div>
-                        <div className="font-mono text-xs sm:text-sm font-semibold tracking-wider text-white">
+                        <div className="font-mono text-[11px] sm:text-xs font-semibold tracking-wider text-white truncate">
                           {user?.name?.toUpperCase() || "RIHAD AL-ISLAM / PRIVATE CLIENT"}
                         </div>
                       </div>
@@ -667,7 +670,7 @@ export default function HomePage() {
                       </div>
 
                       {/* Holographic Circles Symbol */}
-                      <div className="flex -space-x-3 items-center">
+                      <div className="flex -space-x-3 items-center shrink-0">
                         <div className="w-7 h-7 rounded-full bg-red-500/80 backdrop-blur-xs border border-white/20" />
                         <div className="w-7 h-7 rounded-full bg-amber-400/80 backdrop-blur-xs border border-white/20" />
                       </div>
@@ -702,28 +705,30 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Flip Card Action Button */}
-                <div className="mt-4 flex items-center justify-between text-xs text-slate-400 px-2">
-                  <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-                    <BadgeCheck className="h-4 w-4" />
-                    {activeCard.material}
-                  </span>
-                  <button
-                    onClick={() => setIsCardFlipped(!isCardFlipped)}
-                    className="flex items-center gap-1 text-slate-300 hover:text-white underline underline-offset-4 font-mono text-[11px]"
-                  >
-                    <RefreshCw className="h-3 w-3" />
-                    {isCardFlipped ? "Show Front" : "Tap to Flip Card (CVV)"}
-                  </button>
-                </div>
+              {/* Flip Card Action & Material Spec Bar */}
+              <div className="mt-8 w-full max-w-sm sm:max-w-md flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400 px-2">
+                <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+                  <BadgeCheck className="h-4 w-4 shrink-0 text-emerald-400" />
+                  <span className="truncate">{activeCard.material}</span>
+                </span>
+                <button
+                  onClick={() => setIsCardFlipped(!isCardFlipped)}
+                  className="flex items-center gap-1 text-slate-300 hover:text-white underline underline-offset-4 font-mono text-[11px] shrink-0"
+                >
+                  <RefreshCw className="h-3 w-3" />
+                  {isCardFlipped ? "Show Front" : "Tap to Flip Card (CVV)"}
+                </button>
               </div>
 
               {/* Card Perks Bullet Summary */}
-              <div className="mt-6 w-full max-w-sm sm:max-w-md glass-forest-card rounded-2xl p-4 text-xs space-y-2">
-                <div className="flex items-center justify-between font-semibold text-white pb-1 border-b border-emerald-900/40">
-                  <span className="text-emerald-300">{activeCard.name}</span>
-                  <span className="text-teal-300">{activeCard.cashback}</span>
+              <div className="mt-4 w-full max-w-sm sm:max-w-md glass-forest-card rounded-2xl p-4 text-xs space-y-2.5 relative z-10 border border-emerald-500/20 shadow-lg">
+                <div className="flex items-center justify-between font-semibold text-white pb-2 border-b border-emerald-900/40">
+                  <span className="text-emerald-300 font-bold">{activeCard.name}</span>
+                  <span className="text-teal-300 font-mono bg-teal-950/60 px-2 py-0.5 rounded-lg border border-teal-500/30 text-[11px]">
+                    {activeCard.cashback}
+                  </span>
                 </div>
                 <div className="text-slate-300 flex items-center gap-2">
                   <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
@@ -1007,7 +1012,7 @@ export default function HomePage() {
             </p>
 
             {/* Tab Controls */}
-            <div className="inline-flex p-1.5 rounded-2xl glass-forest-pill border border-emerald-500/20 mt-4">
+            <div className="inline-flex max-w-full overflow-x-auto p-1.5 rounded-2xl glass-forest-pill border border-emerald-500/20 mt-4">
               <button
                 onClick={() => setActiveTab("personal")}
                 className={`px-5 py-2 rounded-xl text-xs font-semibold transition-all ${
