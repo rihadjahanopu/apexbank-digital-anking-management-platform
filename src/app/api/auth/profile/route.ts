@@ -27,7 +27,7 @@ export async function PUT(req: Request) {
       user._id,
       { $set: parseResult.data },
       { new: true }
-    );
+    ).select("+transactionPin");
 
     if (!updated) {
       return NextResponse.json(
