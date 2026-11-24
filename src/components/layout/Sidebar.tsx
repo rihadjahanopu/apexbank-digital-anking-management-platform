@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Building2,
   LayoutDashboard,
   Users,
   Wallet,
@@ -24,6 +23,9 @@ import {
   UserCog,
   CreditCard,
   ShieldCheck,
+  QrCode,
+  Smartphone,
+  KeyRound,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UserRole, ROLES } from "@/lib/constants";
@@ -191,6 +193,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: <Wallet className="h-4 w-4" />,
     },
     {
+      label: "PIN Reset Desk",
+      href: "/staff/pin-resets",
+      icon: <KeyRound className="h-4 w-4" />,
+    },
+    {
       label: "KYC Review",
       href: "/staff/kyc",
       icon: <FileCheck className="h-4 w-4" />,
@@ -249,6 +256,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: <ArrowLeftRight className="h-4 w-4" />,
     },
     {
+      label: "Bangla QR Pay",
+      href: "/customer/bangla-qr",
+      icon: <QrCode className="h-4 w-4" />,
+      badge: "BD QR",
+    },
+    {
+      label: "Mobile Recharge",
+      href: "/customer/recharge",
+      icon: <Smartphone className="h-4 w-4" />,
+    },
+    {
       label: "Deposit Request",
       href: "/customer/deposit",
       icon: <ArrowDownToLine className="h-4 w-4" />,
@@ -296,31 +314,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Mobile Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-xs lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-xs lg:hidden transition-opacity"
           onClick={onClose}
           aria-hidden="true"
         />
       )}
 
-      {/* Sidebar Container */}
+      {/* Sidebar Container - Fixed/Sticky on Desktop, Slide-over on Mobile */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-slate-200/80 bg-white transition-transform duration-200 ease-in-out dark:border-slate-800/80 dark:bg-slate-900 lg:static lg:translate-x-0",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed inset-y-0 left-0 z-50 flex w-72 max-w-[85vw] flex-col border-r border-slate-200/80 bg-white transition-transform duration-300 ease-in-out dark:border-slate-800/80 dark:bg-slate-900 lg:sticky lg:top-0 lg:z-30 lg:h-screen lg:w-64 lg:shrink-0 lg:translate-x-0",
+          isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         )}
       >
         {/* Brand Header */}
-        <div className="flex h-16 items-center justify-between px-5 border-b border-slate-200/80 dark:border-slate-800/80">
+        <div className="flex h-16 items-center justify-between px-5 border-b border-slate-200/80 dark:border-slate-800/80 shrink-0">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm">
-              <Building2 className="h-5 w-5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-tr from-emerald-600 to-teal-400 text-slate-950 shadow-sm shadow-emerald-500/20">
+              <Landmark className="h-5 w-5" />
             </div>
             <div className="flex flex-col">
               <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white leading-none">
-                Apex<span className="text-indigo-600 dark:text-indigo-400">Bank</span>
+                Apex<span className="text-emerald-500 dark:text-emerald-400">Bank</span>
               </span>
               <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-1">
-                Digital Management
+                Digital Reserve
               </span>
             </div>
           </Link>
@@ -334,7 +352,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* User Role Tag */}
-        <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between">
+        <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5 min-w-0">
             {userAvatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -344,7 +362,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 className="h-8 w-8 rounded-lg object-cover ring-1 ring-slate-200 dark:ring-slate-700 shrink-0"
               />
             ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-xs font-bold text-white shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-tr from-emerald-600 to-teal-500 text-xs font-bold text-slate-950 shrink-0">
                 {userName?.charAt(0).toUpperCase() || "U"}
               </div>
             )}
@@ -360,8 +378,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </Badge>
         </div>
 
-        {/* Nav Items */}
-        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+        {/* Nav Items - Independent Scroll inside Sidebar */}
+        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1 min-h-0">
           {currentNavItems.map((item) => {
             const isActive =
               pathname === item.href ||
@@ -380,7 +398,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 className={cn(
                   "flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all duration-150",
                   isActive
-                    ? "bg-indigo-600 text-white shadow-xs font-semibold"
+                    ? "bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-xs font-semibold shadow-emerald-600/20"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
                 )}
               >
@@ -408,7 +426,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-3 border-t border-slate-200/80 dark:border-slate-800/80 space-y-1">
+        <div className="p-3 border-t border-slate-200/80 dark:border-slate-800/80 space-y-1 shrink-0">
           <Link
             href="/profile"
             onClick={() => {
