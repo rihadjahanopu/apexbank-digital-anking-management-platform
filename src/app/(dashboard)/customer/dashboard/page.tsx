@@ -6,13 +6,14 @@ import {
   Wallet,
   ArrowLeftRight,
   ArrowDownToLine,
-  ArrowUpFromLine,
   TrendingUp,
   CreditCard,
   Building,
   Landmark,
   ShieldCheck,
   Clock,
+  QrCode,
+  Smartphone,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -67,9 +68,23 @@ export default function CustomerDashboardPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <Link href="/customer/bangla-qr">
+              <Button size="sm" variant="primary" leftIcon={<QrCode className="h-4 w-4" />}>
+                Bangla QR
+              </Button>
+            </Link>
+            <Link href="/customer/recharge">
+              <Button
+                variant="outline"
+                size="sm"
+                leftIcon={<Smartphone className="h-4 w-4" />}
+              >
+                Recharge
+              </Button>
+            </Link>
             <Link href="/customer/transfer">
-              <Button size="sm" leftIcon={<ArrowLeftRight className="h-4 w-4" />}>
+              <Button size="sm" variant="outline" leftIcon={<ArrowLeftRight className="h-4 w-4" />}>
                 Send Money
               </Button>
             </Link>
@@ -80,15 +95,6 @@ export default function CustomerDashboardPage() {
                 leftIcon={<ArrowDownToLine className="h-4 w-4" />}
               >
                 Deposit
-              </Button>
-            </Link>
-            <Link href="/customer/withdraw">
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<ArrowUpFromLine className="h-4 w-4" />}
-              >
-                Withdraw
               </Button>
             </Link>
           </div>
@@ -234,7 +240,7 @@ export default function CustomerDashboardPage() {
         {/* Charts & Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Monthly Inflow vs Outflow */}
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2 min-w-0 overflow-hidden">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -247,7 +253,7 @@ export default function CustomerDashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="h-64 w-full">
+              <div className="h-64 w-full min-w-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={dashboard?.monthlyActivity || []}>
                     <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
