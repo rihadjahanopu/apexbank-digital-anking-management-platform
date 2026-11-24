@@ -141,7 +141,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className="h-7 w-7 rounded-lg object-cover ring-1 ring-slate-200 dark:ring-slate-700 shrink-0"
                   />
                 ) : (
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600 text-xs font-bold text-white shrink-0">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-linear-to-tr from-emerald-600 to-teal-500 text-xs font-bold text-slate-950 shrink-0">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -160,7 +160,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         ) : (
           <Link
             href="/login"
-            className="flex items-center gap-1.5 rounded-xl bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-xs"
+            className="flex items-center gap-1.5 rounded-xl bg-linear-to-r from-emerald-500 to-teal-500 px-3 py-1.5 text-xs font-bold text-slate-950 shadow-xs"
           >
             <Shield className="h-3.5 w-3.5" />
             Sign In
