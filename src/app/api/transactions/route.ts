@@ -27,12 +27,20 @@ export async function GET(req: Request) {
     // Customer can only view their own transactions
     if (user.role === ROLES.CUSTOMER) {
       const myAccounts = await BankAccount.find({ userId: user._id }).select("_id");
-      const myAccountIds = myAccounts.map((a) => a._id);
-      filter.$or = [
-        { senderAccount: { $in: myAccountIds } },
-        { receiverAccount: { $in: myAccountIds } },
-      ];
-    } else if (accountId) {
+      const myAccountIds = myAccounts.map((a) => a._id.toString());
+
+      if (accountId && accountId !== "ALL" && myAccountIds.includes(accountId)) {
+        filter.$or = [
+          { senderAccount: accountId },
+          { receiverAccount: accountId },
+        ];
+      } else {
+        filter.$or = [
+          { senderAccount: { $in: myAccountIds } },
+          { receiverAccount: { $in: myAccountIds } },
+        ];
+      }
+    } else if (accountId && accountId !== "ALL") {
       filter.$or = [
         { senderAccount: accountId },
         { receiverAccount: accountId },
