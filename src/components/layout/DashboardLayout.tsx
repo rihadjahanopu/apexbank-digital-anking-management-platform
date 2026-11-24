@@ -100,8 +100,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const unreadCount = notifData?.unreadCount || 0;
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
-      {/* Sidebar */}
+    <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
+      {/* Fixed Sticky Sidebar */}
       <Sidebar
         role={activeUser?.role}
         userName={activeUser?.name}
@@ -110,8 +110,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         onClose={() => setIsSidebarOpen(false)}
       />
 
-      {/* Main Container */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      {/* Main Container - Independent scroll */}
+      <div className="flex flex-1 flex-col h-screen min-w-0 overflow-hidden">
         <Navbar
           user={activeUser || null}
           unreadCount={unreadCount}
@@ -119,7 +119,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           onOpenNotifications={() => setIsNotificationsOpen(true)}
         />
 
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto min-w-0 p-4 sm:p-6 lg:p-8">
           <div className="mx-auto max-w-7xl">{children}</div>
         </main>
       </div>
