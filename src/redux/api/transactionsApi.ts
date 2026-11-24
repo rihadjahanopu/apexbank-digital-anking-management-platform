@@ -26,6 +26,24 @@ export interface WithdrawalRequestInput {
   description: string;
 }
 
+export interface BanglaQRPayInput {
+  senderAccountId: string;
+  qrRawString: string;
+  amount: number;
+  transactionPin: string;
+  note?: string;
+}
+
+export interface MobileRechargeInput {
+  senderAccountId: string;
+  mobileNumber: string;
+  operatorId: string;
+  connectionType: string;
+  amount: number;
+  packTitle?: string;
+  transactionPin: string;
+}
+
 export const transactionsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getTransactions: builder.query<
@@ -193,6 +211,24 @@ export const transactionsApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Transaction", "Account", "Dashboard"],
     }),
+
+    payBanglaQR: builder.mutation<ApiResponse, BanglaQRPayInput>({
+      query: (body) => ({
+        url: "/payments/bangla-qr",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Transaction", "Account", "Dashboard", "Notification"],
+    }),
+
+    rechargeMobile: builder.mutation<ApiResponse, MobileRechargeInput>({
+      query: (body) => ({
+        url: "/payments/recharge",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Transaction", "Account", "Dashboard", "Notification"],
+    }),
   }),
 });
 
@@ -208,4 +244,6 @@ export const {
   useReviewWithdrawalRequestMutation,
   useGetSuspiciousTransactionsQuery,
   useReviewSuspiciousTransactionMutation,
+  usePayBanglaQRMutation,
+  useRechargeMobileMutation,
 } = transactionsApi;
