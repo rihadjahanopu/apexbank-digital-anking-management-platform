@@ -27,6 +27,11 @@ JWT_SECRET=apex_digital_banking_super_secret_jwt_key_2026_production_grade
 JWT_EXPIRES_IN=7d
 NEXT_PUBLIC_APP_NAME="Apex Bank"
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Cloudinary Storage Configuration
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
 ### 3. Start MongoDB
@@ -112,6 +117,7 @@ Open [http://localhost:3000](http://localhost:3000)
 - Monthly financial activity chart
 
 ### 💳 Card Management & Service Requests
+
 - 16-Digit Luhn algorithm verified card number generation (Visa BIN `4532`, Mastercard BIN `5324`)
 - Secure CVV generator and encrypted card credential vault
 - Instant Virtual Card issuance linked directly to active depository checking/savings accounts
@@ -126,6 +132,7 @@ Open [http://localhost:3000](http://localhost:3000)
 - 4-digit card PIN authentication to decrypt and reveal unmasked 16-digit PAN and CVV
 
 ### 🏦 Customer Bank Account Closure Governance
+
 - Customer self-service account termination application on active accounts
 - Real-time balance snapshot at application time with optional target payout account for balance disbursement
 - Pre-populated common reasons (relocation, entity dissolution, unneeded reserve) or custom notes
@@ -135,6 +142,7 @@ Open [http://localhost:3000](http://localhost:3000)
   - On rejection: records officer remarks and notifies customer with zero status modification
 
 ### 🔐 Two-Factor Authentication (2FA) & Digital KYC
+
 - RFC 6238 TOTP Two-Factor Authentication with QR code setup and dynamic 6-digit challenge at login
 - Identity KYC Compliance Queue: upload National ID, Passport, Driver's License; Admin/Staff verification desk with automatic verified status promotion
 
@@ -146,6 +154,48 @@ Open [http://localhost:3000](http://localhost:3000)
 - Duplicate/idempotency protection
 - Transaction PIN verification
 - Fraud velocity checks (flags rapid successive transfers)
+
+### 🇧🇩 Bangla QR Payment Gateway (NPSB-MPM)
+
+- Full compliance with **Bangladesh Bank PSD Circular** and **EMVCo Merchant-Presented Mode (MPM)**
+- Dynamic QR code generation for merchant and personal payee requests
+- Live camera and static QR scanner with instant verification
+- Instant clearing via National Payment Switch Bangladesh (NPSB)
+- Digital PDF receipt generation with embedded verification QR code and SHA-256 audit hash
+
+### 📱 Mobile Airtime Recharge (Telecom Gateway)
+
+- Supports all major Bangladeshi telecom operators: Grameenphone, Robi, Banglalink, Airtel, Teletalk
+- Prepaid and Postpaid connection options
+- Dynamic operator package catalog: Internet, Voice/Minutes, and Unlimited Combo bundles
+- PIN-authorized balance debit and instant telecom credit
+- Official downloadable BDT transaction receipt PDF
+
+### 📄 Bank Statements & Financial Ledgers
+
+- Official bank-grade account statements for **1, 3, 6, 12, and 24 months**
+- Dual security border layout, regulatory header, and circular official bank seal
+- Dynamic statement verification QR code with deterministic cryptographic audit trail
+- Balanced 182mm table formatting with continuous border drawing across multi-page statements
+- Summary KPI overview cards: Opening Balance, Total Debits, Total Credits, and Closing Balance
+
+### 🔑 Transaction PIN Security & Staff Reset Governance
+
+- 4-digit confidential PIN required for high-risk operations (transfers, Bangla QR, recharge)
+- 3-tier security: initial setup (2 fields) vs. change PIN (3 fields requiring current PIN or account password)
+- **Forgot PIN Staff Reset Workflow**:
+  - Customer submits a verified PIN reset request with explanation
+  - Real-time in-app review status badge for customer
+  - Staff / Admin **PIN Reset Desk** (`/staff/pin-resets`) with search, filter, and customer account inspection
+  - Officer approval atomically wipes locked PIN and sends notification for immediate fresh setup
+
+### ☁️ Cloud Asset Storage (Cloudinary)
+
+- High-availability cloud image and document storage via Cloudinary SDK
+- Authenticated `/api/upload` endpoint supporting multipart file streams and base64 payloads
+- Profile avatar upload with auto-crop and WebP optimization
+- Digital KYC document scanner accepting high-res images and PDF files up to 10MB
+- Staff KYC inspection viewer supporting full-resolution Cloudinary previews and PDF links
 
 ### 🏧 Deposits & Withdrawals
 
@@ -244,13 +294,15 @@ src/
 | Icons            | Lucide React                           |
 | Toasts           | Sonner                                 |
 | PDF              | jsPDF + jspdf-autotable                |
+| Cloud Storage    | Cloudinary SDK                         |
+| Optical OCR      | Tesseract.js                           |
 
 ---
 
 ## 🏗️ Build & Lint
 
 ```bash
-npm run build   # Production build (all 62 routes)
+npm run build   # Production build (all 102 routes)
 npm run lint    # ESLint (0 errors, 0 warnings)
 npm run dev     # Development server with Turbopack
 npm run seed    # Seed demo data into MongoDB
@@ -279,6 +331,7 @@ npm run seed    # Seed demo data into MongoDB
 | `Transaction`       | Immutable ledger of all financial movements                |
 | `DepositRequest`    | Pending deposit requests awaiting approval                 |
 | `WithdrawalRequest` | Pending withdrawal requests awaiting approval              |
+| `PinResetRequest`   | Customer transaction PIN reset governance review queue     |
 | `Loan`              | Loan applications through full lifecycle                   |
 | `LoanRepayment`     | Installment schedule with payment tracking                 |
 | `Notification`      | In-app notification records                                |
