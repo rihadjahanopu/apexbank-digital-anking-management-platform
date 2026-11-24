@@ -87,7 +87,7 @@ export async function getUserFromRequest(
     return null;
   }
 
-  const user = await User.findById(payload.userId);
+  const user = await User.findById(payload.userId).select("+transactionPin");
   if (!user || user.status !== USER_STATUS.ACTIVE) {
     return null;
   }
