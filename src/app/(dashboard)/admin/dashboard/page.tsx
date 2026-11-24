@@ -68,7 +68,7 @@ export default function AdminDashboardPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
             <Link href="/admin/suspicious">
               <Button
                 variant={stats && stats.suspiciousTransactions > 0 ? "danger" : "outline"}
@@ -194,9 +194,9 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Analytics Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-w-0">
           {/* Monthly Transaction Volume Chart */}
-          <Card>
+          <Card className="min-w-0 overflow-hidden">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -209,7 +209,7 @@ export default function AdminDashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="h-72 w-full">
+              <div className="h-72 w-full min-w-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={stats?.monthlyVolume || []}>
                     <defs>
@@ -253,7 +253,7 @@ export default function AdminDashboardPage() {
           </Card>
 
           {/* Deposits vs Withdrawals Comparison */}
-          <Card>
+          <Card className="min-w-0 overflow-hidden">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -266,7 +266,7 @@ export default function AdminDashboardPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="h-72 w-full">
+              <div className="h-72 w-full min-w-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={stats?.depositsVsWithdrawals || []}>
                     <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
