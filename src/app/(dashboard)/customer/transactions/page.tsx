@@ -6,6 +6,9 @@ import {
   Search,
   Download,
   FileSpreadsheet,
+  FileText,
+  CheckCircle2,
+  FileDown,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -24,18 +27,53 @@ import {
   Input,
   Select,
   EmptyState,
+  Modal,
 } from "@/components/ui";
 import { useGetTransactionsQuery } from "@/redux/api/transactionsApi";
+import { useGetMyAccountsQuery } from "@/redux/api/accountsApi";
+import { useAppSelector } from "@/redux/hooks";
+import {
+  generateAccountStatementPDF,
+  StatementTransactionItem,
+} from "@/lib/statement-pdf";
 import { ROLES, TRANSACTION_TYPES, TRANSACTION_STATUS } from "@/lib/constants";
 import { formatCurrency } from "@/lib/money";
 import { formatDateTime } from "@/lib/utils";
 import { IBankAccount, ITransaction } from "@/types";
+
+interface StatementPeriodOption {
+  id: "1M" | "3M" | "6M" | "12M" | "24M" | "CUSTOM";
+  label: string;
+  bengali: string;
+  badge?: "Popular" | "Standard" | "Extended";
+}
+
+const STATEMENT_PERIODS: StatementPeriodOption[] = [
+  { id: "6M", label: "6 Months", bengali: "গত ৬ মাস", badge: "Popular" },
+  { id: "12M", label: "12 Months (1 Year)", bengali: "গত ১ বছর", badge: "Standard" },
+  { id: "24M", label: "24 Months (2 Years)", bengali: "গত ২ বছর", badge: "Extended" },
+  { id: "3M", label: "3 Months", bengali: "গত ৩ মাস" },
+  { id: "1M", label: "1 Month", bengali: "গত ১ মাস" },
+  { id: "CUSTOM", label: "Custom Range", bengali: "কাস্টম রেঞ্জ" },
+];
 
 export default function CustomerTransactionsPage() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [page, setPage] = useState(1);
+
+  // Statement Modal State
+  const [isStatementModalOpen, setIsStatementModalOpen] = useState(false);
+  const [statementAccountId, setStatementAccountId] = useState<string>("");
+  const [statementPeriod, setStatementPeriod] = useState<"1M" | "3M" | "6M" | "12M" | "24M" | "CUSTOM">("6M");
+  const [customStartDate, setCustomStartDate] = useState("");
+  const [customEndDate, setCustomEndDate] = useState("");
+  const [isGeneratingStatement, setIsGeneratingStatement] = useState(false);
+
+  const { data: accountsData } = useGetMyAccountsQuery();
+  const accounts = accountsData?.accounts || [];
+  const { user } = useAppSelector((state) => state.auth);
 
   const { data, isLoading } = useGetTransactionsQuery({
     search,
@@ -98,6 +136,134 @@ export default function CustomerTransactionsPage() {
     link.click();
     document.body.removeChild(link);
     toast.success("CSV Statement exported successfully!");
+  };
+
+  // 2. Download Multi-Period Bank Statement PDF (6M, 12M, 24M, etc.)
+  const handleDownloadStatementPDF = async () => {
+    const targetAccount =
+      accounts.find((a) => a._id === (statementAccountId || accounts[0]?._id)) ||
+      accounts[0];
+
+    if (!targetAccount) {
+      toast.error("No bank account found to generate statement.");
+      return;
+    }
+
+    let sDate = "";
+    let eDate = new Date().toISOString().split("T")[0];
+    let pLabel = "Last 6 Months (গত ৬ মাস)";
+
+    if (statementPeriod === "CUSTOM") {
+      if (!customStartDate || !customEndDate) {
+        toast.error("Please select both start date and end date.");
+        return;
+      }
+      if (new Date(customStartDate) > new Date(customEndDate)) {
+        toast.error("Start date cannot be after end date.");
+        return;
+      }
+      sDate = customStartDate;
+      eDate = customEndDate;
+      pLabel = `Custom Range (${sDate} to ${eDate})`;
+    } else {
+      const end = new Date();
+      const start = new Date();
+      if (statementPeriod === "1M") {
+        start.setMonth(start.getMonth() - 1);
+        pLabel = "Last 1 Month (গত ১ মাস)";
+      } else if (statementPeriod === "3M") {
+        start.setMonth(start.getMonth() - 3);
+        pLabel = "Last 3 Months (গত ৩ মাস)";
+      } else if (statementPeriod === "6M") {
+        start.setMonth(start.getMonth() - 6);
+        pLabel = "Last 6 Months (গত ৬ মাস)";
+      } else if (statementPeriod === "12M") {
+        start.setFullYear(start.getFullYear() - 1);
+        pLabel = "Last 12 Months / 1 Year (গত ১ বছর)";
+      } else if (statementPeriod === "24M") {
+        start.setFullYear(start.getFullYear() - 2);
+        pLabel = "Last 24 Months / 2 Years (গত ২ বছর)";
+      }
+      sDate = start.toISOString().split("T")[0];
+      eDate = end.toISOString().split("T")[0];
+    }
+
+    try {
+      setIsGeneratingStatement(true);
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("auth_token")
+          : null;
+      const headers: Record<string, string> = {};
+      if (token) headers["Authorization"] = `Bearer ${token}`;
+
+      const queryParams = new URLSearchParams({
+        accountId: targetAccount._id,
+        startDate: sDate,
+        endDate: eDate,
+        limit: "1000",
+      });
+
+      const res = await fetch(`/api/transactions?${queryParams.toString()}`, {
+        headers,
+        credentials: "include",
+      });
+      const json = await res.json();
+
+      if (!json.success) {
+        throw new Error(json.error || "Failed to load statement transactions.");
+      }
+
+      const txList = json.transactions || [];
+      const mappedTxns: StatementTransactionItem[] = txList.map(
+        (tx: ITransaction) => {
+          const sender = tx.senderAccount as IBankAccount | undefined;
+          const isDebit =
+            sender?._id === targetAccount._id ||
+            sender?.accountNumber === targetAccount.accountNumber;
+          return {
+            transactionId: tx.transactionId,
+            date: tx.createdAt as unknown as string,
+            type: tx.type,
+            description: tx.description || "Apex Bank Digital Transfer",
+            amount: tx.amount,
+            fee: tx.fee || 0,
+            isDebit,
+          };
+        }
+      );
+
+      await generateAccountStatementPDF({
+        account: {
+          accountNumber: targetAccount.accountNumber,
+          accountType: targetAccount.accountType,
+          currency: targetAccount.currency || "BDT",
+          balance: targetAccount.balance,
+          availableBalance: targetAccount.availableBalance,
+          branchName: targetAccount.branchName,
+        },
+        customer: {
+          name: user?.name || "Account Holder",
+          email: user?.email || "customer@apexbank.com",
+          phone: user?.phone,
+          address: user?.address,
+          nationalId: user?.nationalId,
+        },
+        periodLabel: pLabel,
+        startDate: sDate,
+        endDate: eDate,
+        transactions: mappedTxns,
+      });
+
+      toast.success(`Account statement for ${pLabel} generated successfully!`);
+      setIsStatementModalOpen(false);
+    } catch (err: unknown) {
+      console.error("Statement PDF generation error:", err);
+      const error = err as Error;
+      toast.error(error.message || "Failed to generate account statement.");
+    } finally {
+      setIsGeneratingStatement(false);
+    }
   };
 
   // 2. Generate Professional PDF Receipt
@@ -185,7 +351,7 @@ export default function CustomerTransactionsPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2.5">
             <Button
               variant="outline"
               size="sm"
@@ -193,6 +359,14 @@ export default function CustomerTransactionsPage() {
               leftIcon={<FileSpreadsheet className="h-4 w-4 text-emerald-600" />}
             >
               Export CSV Statement
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setIsStatementModalOpen(true)}
+              leftIcon={<FileDown className="h-4 w-4" />}
+            >
+              Download Bank Statement (PDF)
             </Button>
           </div>
         </div>
@@ -353,6 +527,149 @@ export default function CustomerTransactionsPage() {
             </div>
           )}
         </Card>
+        {/* Modal: Download Multi-Period Bank Statement PDF */}
+        <Modal
+          isOpen={isStatementModalOpen}
+          onClose={() => setIsStatementModalOpen(false)}
+          title={
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                <FileText className="h-4 w-4" />
+              </div>
+              <span>Download Official Bank Statement (অ্যাকাউন্ট স্টেটমেন্ট)</span>
+            </div>
+          }
+          description="Generate certified, verifiable electronic bank statements with official NPSB ledger records and stamp seal."
+          maxWidth="lg"
+        >
+          <div className="space-y-5 pt-1">
+            {/* 1. Account Selector */}
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Select Depository Account (অ্যাকাউন্ট নির্বাচন করুন)
+              </label>
+              <Select
+                value={statementAccountId || (accounts[0]?._id ?? "")}
+                onChange={(e) => setStatementAccountId(e.target.value)}
+              >
+                {accounts.map((acc) => (
+                  <option key={acc._id} value={acc._id}>
+                    {acc.accountType} (#{acc.accountNumber}) — Balance: {formatCurrency(acc.availableBalance)}
+                  </option>
+                ))}
+              </Select>
+            </div>
+
+            {/* 2. Period Selector */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Select Statement Period (স্টেটমেন্ট সময়সীমা)
+                </label>
+                <span className="text-[11px] text-emerald-600 font-medium">
+                  Official Banking Formats
+                </span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {STATEMENT_PERIODS.map((p) => {
+                  const isSelected = statementPeriod === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => setStatementPeriod(p.id)}
+                      className={`p-3 rounded-xl border text-left transition-all relative ${
+                        isSelected
+                          ? "border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-950 dark:text-emerald-100 ring-2 ring-emerald-500/20"
+                          : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs">{p.label}</span>
+                        {p.badge && (
+                          <span
+                            className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase ${
+                              p.badge === "Popular"
+                                ? "bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300"
+                                : p.badge === "Standard"
+                                ? "bg-blue-100 text-blue-800 dark:bg-blue-950/50 dark:text-blue-300"
+                                : "bg-purple-100 text-purple-800 dark:bg-purple-950/50 dark:text-purple-300"
+                            }`}
+                          >
+                            {p.badge}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                        {p.bengali}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Custom Date Pickers */}
+            {statementPeriod === "CUSTOM" && (
+              <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">
+                    Start Date (শুরুর তারিখ)
+                  </label>
+                  <input
+                    type="date"
+                    value={customStartDate}
+                    onChange={(e) => setCustomStartDate(e.target.value)}
+                    className="w-full text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 text-slate-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">
+                    End Date (শেষ তারিখ)
+                  </label>
+                  <input
+                    type="date"
+                    value={customEndDate}
+                    onChange={(e) => setCustomEndDate(e.target.value)}
+                    className="w-full text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 text-slate-900 dark:text-white"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Period Preview Card */}
+            <div className="p-3.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/80 dark:border-emerald-800/40 text-xs text-emerald-900 dark:text-emerald-200 space-y-1">
+              <div className="flex items-center gap-1.5 font-bold">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <span>Certified Bank Ledger Output</span>
+              </div>
+              <p className="text-[11px] text-emerald-700 dark:text-emerald-300">
+                Official statement includes debit/credit breakdown, opening & closing balances, cryptographic SHA256 audit hash, and scannable QR verification.
+              </p>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <Button
+                variant="outline"
+                size="md"
+                onClick={() => setIsStatementModalOpen(false)}
+                disabled={isGeneratingStatement}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={handleDownloadStatementPDF}
+                isLoading={isGeneratingStatement}
+                leftIcon={<FileDown className="h-4 w-4" />}
+              >
+                Generate Statement PDF
+              </Button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </DashboardLayout>
   );
