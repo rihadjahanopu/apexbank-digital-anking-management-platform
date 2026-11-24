@@ -88,6 +88,36 @@ export const authApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Passkey"],
     }),
+
+    getMyPinResetRequest: builder.query<
+      {
+        success: boolean;
+        request: {
+          _id: string;
+          reason: string;
+          status: string;
+          createdAt: string;
+          adminRemarks?: string;
+          reviewedAt?: string;
+        } | null;
+      },
+      void
+    >({
+      query: () => "/auth/pin-reset-request/my",
+      providesTags: ["Auth"],
+    }),
+
+    submitPinResetRequest: builder.mutation<
+      ApiResponse,
+      { reason: string; password?: string }
+    >({
+      query: (data) => ({
+        url: "/auth/pin-reset-request",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
   }),
 });
 
@@ -101,4 +131,6 @@ export const {
   useUpdateProfileMutation,
   useGetMyPasskeysQuery,
   useDeletePasskeyMutation,
+  useGetMyPinResetRequestQuery,
+  useSubmitPinResetRequestMutation,
 } = authApi;
