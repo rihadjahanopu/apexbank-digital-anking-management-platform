@@ -210,7 +210,7 @@ export default function CustomerAccountsPage() {
                     </div>
 
                     {/* Details breakdown */}
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px]">
                       <div>
                         <span className="text-slate-400 block">Available</span>
                         <span className="font-bold text-emerald-600 dark:text-emerald-400">
@@ -236,7 +236,7 @@ export default function CustomerAccountsPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="p-4 bg-slate-50/50 dark:bg-slate-900/40 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+                <div className="p-4 bg-slate-50/50 dark:bg-slate-900/40 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
                   <Link href="/customer/deposit" className="flex-1">
                     <Button
                       variant="outline"
