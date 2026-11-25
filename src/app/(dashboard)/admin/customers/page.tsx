@@ -304,7 +304,7 @@ export default function AdminCustomersPage() {
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between p-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 border-t border-slate-100 dark:border-slate-800">
               <span className="text-xs text-slate-500">
                 Page {page} of {totalPages}
               </span>
@@ -340,7 +340,7 @@ export default function AdminCustomersPage() {
         >
           {selectedCustomer && (
             <div className="space-y-4 pt-2">
-              <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div>
                   <span className="text-slate-400 block">Full Name</span>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">
