@@ -11,7 +11,8 @@ export async function POST(req: Request) {
     if (errorResponse || !user) return errorResponse;
 
     const secret = generateTotpSecret();
-    const serviceName = process.env.NEXT_PUBLIC_APP_NAME || "Apex Bank";
+    const serviceName =
+      process.env.APP_NAME || process.env.NEXT_PUBLIC_APP_NAME || "Apex Bank";
     const otpauth = generateTotpUri(user.email, serviceName, secret);
     const qrCodeDataUrl = await qrcode.toDataURL(otpauth);
 
