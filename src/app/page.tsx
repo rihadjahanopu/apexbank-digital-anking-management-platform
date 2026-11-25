@@ -829,7 +829,7 @@ export default function HomePage() {
               </div>
 
               {/* Conversion Breakdown & Real Savings */}
-              <div className="glass-forest-pill rounded-2xl p-4 sm:p-6 border border-emerald-400/20 space-y-3">
+              <div className="glass-forest-pill rounded-2xl p-4 sm:p-6 border border-emerald-400/20 space-y-3 overflow-hidden">
                 <div className="flex items-start justify-between gap-2 text-xs pb-3 border-b border-emerald-900/40">
                   <span className="text-slate-400 shrink">Live Wholesale Rate</span>
                   <span className="font-mono font-semibold text-emerald-300 shrink-0 text-right whitespace-nowrap">
@@ -861,8 +861,8 @@ export default function HomePage() {
                 </div>
 
                 <Link href={isAuthenticated ? "/customer/transfer" : "/register"}>
-                  <button className="w-full mt-2 py-3 rounded-xl bg-linear-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider hover:brightness-110 transition-all flex items-center justify-center gap-2">
-                    <span className="whitespace-nowrap">Send {targetCurrency} at Interbank Rate</span>
+                  <button className="w-full mt-2 py-3 rounded-xl bg-linear-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider hover:brightness-110 transition-all flex items-center justify-center gap-2 overflow-hidden">
+                    <span className="truncate">Send {targetCurrency} at Interbank Rate</span>
                     <ArrowRight className="h-4 w-4 shrink-0" />
                   </button>
                 </Link>
