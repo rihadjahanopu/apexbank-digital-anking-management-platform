@@ -229,7 +229,7 @@ export default function AdminKycPage() {
               )}
 
               {/* Document metadata banner */}
-              <div className="grid grid-cols-2 gap-4 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 text-xs">
                 <div>
                   <span className="text-slate-400 block text-[10px] uppercase">
                     Document Number:
