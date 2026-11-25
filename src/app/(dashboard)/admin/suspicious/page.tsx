@@ -80,7 +80,7 @@ export default function AdminSuspiciousTransactionsPage() {
                   <TableHead>Sender Account</TableHead>
                   <TableHead>Receiver Account</TableHead>
                   <TableHead>Timestamp</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="text-right min-w-[260px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -110,14 +110,15 @@ export default function AdminSuspiciousTransactionsPage() {
                       <TableCell className="text-xs text-slate-500 font-mono">
                         {formatDateTime(tx.createdAt)}
                       </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
+                      <TableCell className="text-right whitespace-nowrap min-w-[260px]">
+                        <div className="flex items-center justify-end gap-2 whitespace-nowrap">
                           <Button
                             variant="outline"
                             size="sm"
                             disabled={isReviewing}
                             onClick={() => handleReview(tx._id, "DISMISS")}
                             leftIcon={<CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />}
+                            className="whitespace-nowrap text-xs hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300 dark:hover:border-emerald-700"
                           >
                             Dismiss Flag
                           </Button>
@@ -127,6 +128,7 @@ export default function AdminSuspiciousTransactionsPage() {
                             disabled={isReviewing}
                             onClick={() => handleReview(tx._id, "BLOCK_ACCOUNT")}
                             leftIcon={<Ban className="h-3.5 w-3.5" />}
+                            className="whitespace-nowrap text-xs shadow-xs hover:shadow-rose-600/30"
                           >
                             Freeze Sender
                           </Button>
