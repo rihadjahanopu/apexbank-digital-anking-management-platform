@@ -7,7 +7,10 @@ export function getRelyingPartyConfig(req: Request) {
   const isLocal = hostname === "localhost" || hostname === "127.0.0.1";
   const protocol =
     req.headers.get("x-forwarded-proto") || (isLocal ? "http" : "https");
-  const fallbackOrigin = `${protocol}://${host}`;
+  const fallbackOrigin =
+    process.env.APP_URL ||
+    process.env.NEXT_PUBLIC_APP_URL ||
+    `${protocol}://${host}`;
   const originHeader = req.headers.get("origin");
 
   const origins = Array.from(
@@ -15,7 +18,10 @@ export function getRelyingPartyConfig(req: Request) {
   );
 
   return {
-    rpName: "Apex Digital Bank",
+    rpName:
+      process.env.APP_NAME ||
+      process.env.NEXT_PUBLIC_APP_NAME ||
+      "Apex Digital Bank",
     rpID: hostname,
     origin: origins.length === 1 ? origins[0] : origins,
   };
