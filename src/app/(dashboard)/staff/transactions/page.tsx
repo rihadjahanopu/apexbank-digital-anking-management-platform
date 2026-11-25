@@ -181,7 +181,7 @@ export default function StaffTransactionsPage() {
           )}
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between p-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 border-t border-slate-100 dark:border-slate-800">
               <span className="text-xs text-slate-500">
                 Page {page} of {totalPages}
               </span>
