@@ -194,11 +194,13 @@ export default function AdminLoansPage() {
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           <Button
-                            variant="ghost"
+                            variant="outline"
                             size="sm"
                             onClick={() => setSelectedLoan(l)}
+                            leftIcon={<Eye className="h-3.5 w-3.5" />}
+                            className="text-xs hover:text-emerald-500 hover:border-emerald-500/40"
                           >
-                            <Eye className="h-3.5 w-3.5" />
+                            Review Dossier
                           </Button>
                           {l.status !== LOAN_STATUS.ACTIVE &&
                             l.status !== LOAN_STATUS.COMPLETED &&
@@ -238,7 +240,7 @@ export default function AdminLoansPage() {
           )}
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between p-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 border-t border-slate-100 dark:border-slate-800">
               <span className="text-xs text-slate-500">
                 Page {page} of {totalPages}
               </span>
