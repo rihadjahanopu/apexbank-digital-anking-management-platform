@@ -170,7 +170,7 @@ export default function CustomerLoansPage() {
                   </CardHeader>
 
                   <CardContent className="p-5 pt-0 space-y-4">
-                    <div className="grid grid-cols-2 gap-3 text-xs pt-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-2">
                       <div>
                         <span className="text-slate-400 block text-[10px] uppercase font-bold">
                           Principal Amount
