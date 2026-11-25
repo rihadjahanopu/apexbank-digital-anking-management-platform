@@ -233,7 +233,7 @@ export const AccountClosuresReviewView: React.FC<AccountClosuresReviewViewProps>
 
         {/* Pagination */}
         {meta && meta.totalPages > 1 && (
-          <div className="flex justify-between items-center text-xs text-slate-500">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-500">
             <span>
               Page {meta.page} of {meta.totalPages} ({meta.total} total requests)
             </span>
