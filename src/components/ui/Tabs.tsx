@@ -48,14 +48,16 @@ export const TabsList = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "inline-flex h-11 items-center justify-start rounded-xl bg-slate-100 p-1 text-slate-500 dark:bg-slate-800/80 dark:text-slate-400",
-      className
-    )}
-    {...props}
-  />
+  <div className="w-full overflow-x-auto no-scrollbar pb-1">
+    <div
+      ref={ref}
+      className={cn(
+        "inline-flex min-w-max h-11 items-center justify-start rounded-xl bg-slate-100 p-1 text-slate-500 dark:bg-slate-800/80 dark:text-slate-400",
+        className
+      )}
+      {...props}
+    />
+  </div>
 ));
 TabsList.displayName = "TabsList";
 
