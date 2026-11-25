@@ -445,7 +445,7 @@ export default function CustomerCardsPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 pt-0 space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                       <Button
                         variant={
                           activeCard.status === CARD_STATUS.FROZEN
@@ -753,7 +753,7 @@ export default function CustomerCardsPage() {
               <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 Card Network
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={() => setNewCardNetwork(CARD_NETWORKS.VISA)}
@@ -989,7 +989,7 @@ export default function CustomerCardsPage() {
               <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                 Card Type
               </label>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {[CARD_TYPES.VIRTUAL, CARD_TYPES.DEBIT, CARD_TYPES.CREDIT].map(
                   (type) => (
                     <button
@@ -1013,7 +1013,7 @@ export default function CustomerCardsPage() {
               <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                 Card Network
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={() => setReqNetwork(CARD_NETWORKS.VISA)}
