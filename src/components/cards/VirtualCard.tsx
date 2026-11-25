@@ -49,7 +49,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
   const isVisa = card.network === CARD_NETWORKS.VISA;
 
   return (
-    <div className="relative group w-full max-w-[380px] h-[230px] rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 transform hover:scale-[1.02]">
+    <div className="relative group w-full max-w-[380px] aspect-[1.586/1] min-h-[190px] sm:min-h-[220px] rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 transform hover:scale-[1.02]">
       {/* Background with Metallic / Deep Navy Gradient */}
       <div
         className={`absolute inset-0 bg-gradient-to-br ${
@@ -74,7 +74,7 @@ export const VirtualCard: React.FC<VirtualCardProps> = ({
       />
 
       {/* Card Content Overlay */}
-      <div className="relative z-10 p-6 flex flex-col justify-between h-full text-white">
+      <div className="relative z-10 p-4 sm:p-6 flex flex-col justify-between h-full text-white">
         {/* Top Row: Bank Brand + Status + NFC */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
