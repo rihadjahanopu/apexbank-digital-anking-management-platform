@@ -367,13 +367,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             )}
             <div className="flex flex-col min-w-0">
-              <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate max-w-[110px]">
+              <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate max-w-[100px]">
                 {userName || "Authenticated"}
               </span>
               <span className="text-[10px] text-slate-400 capitalize">Active Session</span>
             </div>
           </div>
-          <Badge variant={roleBadgeVariant} size="sm" dot>
+          <Badge variant={roleBadgeVariant} size="sm" dot className="shrink-0 whitespace-nowrap">
             {roleLabel}
           </Badge>
         </div>
@@ -386,7 +386,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
               (item.href !== "/admin/dashboard" &&
                 item.href !== "/staff/dashboard" &&
                 item.href !== "/customer/dashboard" &&
-                pathname.startsWith(item.href));
+                pathname.startsWith(`${item.href}/`) &&
+                !currentNavItems.some(
+                  (other) =>
+                    other.href !== item.href &&
+                    other.href.startsWith(item.href) &&
+                    (pathname === other.href || pathname.startsWith(`${other.href}/`))
+                ));
 
             return (
               <Link
