@@ -190,7 +190,7 @@ export default function StaffLoansPage() {
           )}
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between p-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 border-t border-slate-100 dark:border-slate-800">
               <span className="text-xs text-slate-500">
                 Page {page} of {totalPages}
               </span>
@@ -226,7 +226,7 @@ export default function StaffLoansPage() {
         >
           {selectedLoan && (
             <div className="space-y-4 pt-2">
-              <div className="grid grid-cols-2 gap-4 text-xs border-b border-slate-100 dark:border-slate-800 pb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div>
                   <span className="text-slate-400 block">Requested Amount</span>
                   <span className="text-base font-bold text-slate-900 dark:text-slate-100">
