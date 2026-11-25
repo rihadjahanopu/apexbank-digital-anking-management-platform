@@ -502,7 +502,7 @@ export default function CustomerTransactionsPage() {
           )}
 
           {totalPages > 1 && (
-            <div className="flex items-center justify-between p-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 border-t border-slate-100 dark:border-slate-800">
               <span className="text-xs text-slate-500">
                 Page {page} of {totalPages}
               </span>
@@ -611,7 +611,7 @@ export default function CustomerTransactionsPage() {
 
             {/* Custom Date Pickers */}
             {statementPeriod === "CUSTOM" && (
-              <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
                 <div>
                   <label className="block text-[11px] font-medium text-slate-600 dark:text-slate-400 mb-1">
                     Start Date (শুরুর তারিখ)
