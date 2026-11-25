@@ -281,7 +281,7 @@ export default function LoginPage() {
         {/* 1-Click Demo Logins Bar */}
         {!requireTwoFactor && (
           <div className="glass-forest-pill rounded-2xl p-3.5 border border-emerald-500/20 backdrop-blur-xl">
-            <div className="flex items-center justify-between pb-2">
+            <div className="flex flex-wrap items-center justify-between gap-1 pb-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5 font-mono">
                 <KeyRound className="h-3 w-3 text-emerald-400" />
                 1-Click Demo Credentials
@@ -295,30 +295,30 @@ export default function LoginPage() {
                 {autoSeeding ? "Seeding..." : "Init / Reset DB"}
               </button>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
               <button
                 type="button"
                 onClick={() => fillDemoCredentials("admin")}
-                className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1.5 text-xs font-semibold text-emerald-200 hover:bg-emerald-900/80 hover:text-white transition-colors"
+                className="flex items-center justify-center gap-1 sm:gap-1.5 rounded-xl bg-emerald-950/70 border border-emerald-500/30 px-1.5 sm:px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-emerald-200 hover:bg-emerald-900/80 hover:text-white transition-colors truncate"
               >
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-                Admin
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                <span className="truncate">Admin</span>
               </button>
               <button
                 type="button"
                 onClick={() => fillDemoCredentials("staff")}
-                className="flex items-center justify-center gap-1.5 rounded-xl bg-teal-950/70 border border-teal-500/30 px-2.5 py-1.5 text-xs font-semibold text-teal-200 hover:bg-teal-900/80 hover:text-white transition-colors"
+                className="flex items-center justify-center gap-1 sm:gap-1.5 rounded-xl bg-teal-950/70 border border-teal-500/30 px-1.5 sm:px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-teal-200 hover:bg-teal-900/80 hover:text-white transition-colors truncate"
               >
-                <Users className="h-3.5 w-3.5 text-teal-400" />
-                Staff
+                <Users className="h-3.5 w-3.5 text-teal-400 shrink-0" />
+                <span className="truncate">Staff</span>
               </button>
               <button
                 type="button"
                 onClick={() => fillDemoCredentials("customer")}
-                className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-950/70 border border-emerald-500/30 px-2.5 py-1.5 text-xs font-semibold text-emerald-200 hover:bg-emerald-900/80 hover:text-white transition-colors"
+                className="flex items-center justify-center gap-1 sm:gap-1.5 rounded-xl bg-emerald-950/70 border border-emerald-500/30 px-1.5 sm:px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold text-emerald-200 hover:bg-emerald-900/80 hover:text-white transition-colors truncate"
               >
-                <UserCheck className="h-3.5 w-3.5 text-emerald-300" />
-                Customer
+                <UserCheck className="h-3.5 w-3.5 text-emerald-300 shrink-0" />
+                <span className="truncate">Customer</span>
               </button>
             </div>
           </div>
