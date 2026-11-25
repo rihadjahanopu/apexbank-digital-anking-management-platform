@@ -214,26 +214,26 @@ export default function HomePage() {
       </div>
 
       {/* Institutional Top Trust Bar */}
-      <div className="border-b border-emerald-950/80 bg-[#03150e]/95 text-[11px] text-emerald-400/80 py-2 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-y-1 gap-x-4">
-          <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 font-medium text-emerald-300">
+      <div className="border-b border-emerald-950/80 bg-[#03150e]/95 text-[10px] sm:text-[11px] text-emerald-400/80 py-1.5 sm:py-2 px-3 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <span className="inline-flex items-center gap-1.5 font-medium text-emerald-300 truncate">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping inline-block shrink-0" />
-              SWIFT Global Settlement: ONLINE (99.999% SLA)
+              <span className="truncate">SWIFT Global Settlement: ONLINE (99.999% SLA)</span>
             </span>
             <span className="hidden sm:inline text-emerald-800">•</span>
-            <span className="hidden sm:inline text-slate-400">
+            <span className="hidden sm:inline text-slate-400 shrink-0">
               Institution Code: <span className="font-mono text-emerald-300">APEX-US-33</span>
             </span>
           </div>
-          <div className="flex items-center gap-4 text-slate-400 text-right">
-            <span className="hidden md:inline-flex items-center gap-1.5">
+          <div className="flex items-center gap-3 sm:gap-4 text-slate-400 text-right shrink-0">
+            <span className="hidden md:inline-flex items-center gap-1.5 shrink-0">
               <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
               <span>Member FDIC & Regulated Commercial Bank</span>
             </span>
-            <span className="text-emerald-300 font-mono flex items-center gap-1">
+            <span className="text-emerald-300 font-mono flex items-center gap-1 shrink-0">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 inline-block md:hidden shrink-0" />
-              24/7 Concierge Desk
+              24/7 Concierge
             </span>
           </div>
         </div>
@@ -241,23 +241,23 @@ export default function HomePage() {
 
       {/* Floating Glass Forest Navigation Header */}
       <header className="sticky top-0 z-50 w-full glass-forest-nav">
-        <div className="max-w-7xl mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex h-16 sm:h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-linear-to-tr from-emerald-600 to-teal-400 text-slate-950 shadow-lg shadow-emerald-500/25 border border-emerald-300/30 group-hover:scale-105 transition-transform">
-              <Landmark className="h-6 w-6 text-slate-950" />
-              <div className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-emerald-400 border-2 border-[#020b08]" />
+          <Link href="/" className="flex items-center gap-1.5 sm:gap-3 group shrink-0">
+            <div className="relative flex h-8 w-8 sm:h-11 sm:w-11 items-center justify-center rounded-xl sm:rounded-2xl bg-linear-to-tr from-emerald-600 to-teal-400 text-slate-950 shadow-lg shadow-emerald-500/25 border border-emerald-300/30 group-hover:scale-105 transition-transform shrink-0">
+              <Landmark className="h-4.5 w-4.5 sm:h-6 sm:w-6 text-slate-950" />
+              <div className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 h-2 w-2 sm:h-3.5 sm:w-3.5 rounded-full bg-emerald-400 border-2 border-[#020b08]" />
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xl font-bold tracking-tight text-white group-hover:text-emerald-300 transition-colors">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <span className="text-sm sm:text-xl font-bold tracking-tight text-white group-hover:text-emerald-300 transition-colors whitespace-nowrap">
                   Apex<span className="text-emerald-400">Bank</span>
                 </span>
-                <span className="rounded-full bg-emerald-950 border border-emerald-500/30 px-2 py-0.5 text-[9px] font-semibold text-emerald-300 uppercase tracking-wider">
+                <span className="hidden min-[440px]:inline-block rounded-full bg-emerald-950 border border-emerald-500/30 px-1.5 sm:px-2 py-0.5 text-[8px] sm:text-[9px] font-semibold text-emerald-300 uppercase tracking-wider shrink-0">
                   Reserve
                 </span>
               </div>
-              <p className="text-[10px] text-emerald-400/60 tracking-wider uppercase font-mono">
+              <p className="hidden min-[540px]:block text-[9px] sm:text-[10px] text-emerald-400/60 tracking-wider uppercase font-mono truncate">
                 International Digital Banking
               </p>
             </div>
@@ -301,27 +301,30 @@ export default function HomePage() {
           </nav>
 
           {/* Action Area */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {isAuthenticated ? (
-              <Link href={dashboardLink}>
-                <button className="flex items-center gap-2 rounded-xl bg-linear-to-r from-emerald-500 via-teal-500 to-emerald-600 px-4 py-2.5 text-xs font-semibold text-slate-950 shadow-lg shadow-emerald-500/20 hover:brightness-110 active:scale-95 transition-all">
-                  <Activity className="h-4 w-4" />
-                  <span>Enter Dashboard ({user?.role})</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+              <Link href={dashboardLink} className="shrink-0">
+                <button className="flex items-center gap-1 sm:gap-2 rounded-xl bg-linear-to-r from-emerald-500 via-teal-500 to-emerald-600 px-2.5 sm:px-4 py-1.5 sm:py-2.5 text-xs font-semibold text-slate-950 shadow-lg shadow-emerald-500/20 hover:brightness-110 active:scale-95 transition-all whitespace-nowrap">
+                  <Activity className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                  <span className="hidden sm:inline">Enter Dashboard ({user?.role})</span>
+                  <span className="sm:hidden">Dashboard</span>
+                  <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                 </button>
               </Link>
             ) : (
               <>
-                <Link href="/login" className="hidden sm:inline-block">
-                  <button className="rounded-xl border border-emerald-500/30 bg-emerald-950/40 px-4 py-2 text-xs font-medium text-emerald-200 hover:bg-emerald-900/60 hover:text-white transition-all backdrop-blur-md">
+                <Link href="/login" className="hidden sm:inline-block shrink-0">
+                  <button className="rounded-xl border border-emerald-500/30 bg-emerald-950/40 px-3.5 py-2 text-xs font-medium text-emerald-200 hover:bg-emerald-900/60 hover:text-white transition-all backdrop-blur-md whitespace-nowrap">
                     Sign In
                   </button>
                 </Link>
-                <Link href="/register">
-                  <button className="relative group overflow-hidden rounded-xl bg-linear-to-r from-emerald-500 to-teal-400 px-4 py-2 text-xs font-semibold text-slate-950 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-98 transition-all">
-                    <span className="relative z-10 flex items-center gap-1.5">
-                      Open Bank Account
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                <Link href="/register" className="shrink-0">
+                  <button className="relative group overflow-hidden rounded-xl bg-linear-to-r from-emerald-500 to-teal-400 px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold text-slate-950 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-98 transition-all whitespace-nowrap shrink-0">
+                    <span className="relative z-10 flex items-center gap-1 sm:gap-1.5 whitespace-nowrap">
+                      <span className="hidden md:inline">Open Bank Account</span>
+                      <span className="hidden min-[420px]:inline md:hidden">Open Account</span>
+                      <span className="min-[420px]:hidden">Open</span>
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 shrink-0" />
                     </span>
                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform" />
                   </button>
@@ -332,10 +335,10 @@ export default function HomePage() {
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl border border-emerald-500/20 bg-emerald-950/40 text-emerald-300"
+              className="lg:hidden p-1.5 sm:p-2 rounded-xl border border-emerald-500/20 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/40 shrink-0"
               aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {mobileMenuOpen ? <X className="h-4.5 w-4.5 sm:h-5 sm:w-5" /> : <Menu className="h-4.5 w-4.5 sm:h-5 sm:w-5" />}
             </button>
           </div>
         </div>
@@ -397,70 +400,79 @@ export default function HomePage() {
       </header>
 
       {/* Live Financial Rates Marquee Ticker */}
-      <section className="border-b border-emerald-950/80 bg-[#03150e]/60 backdrop-blur-md overflow-hidden py-2.5">
+      <section className="relative border-b border-emerald-950/80 bg-[#03150e]/60 backdrop-blur-md overflow-hidden py-2.5">
+        {/* Left & Right Smooth Gradient Edge Fades (Terminal aesthetic) */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[#020b08] to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[#020b08] to-transparent z-10" />
+
         <div className="animate-marquee flex items-center gap-10 whitespace-nowrap text-xs font-mono">
-          <div className="flex items-center gap-2 text-emerald-400">
-            <span className="text-slate-400">HIGH-YIELD VAULT APY:</span>
-            <span className="font-bold">5.40% GUARANTEED</span>
-            <TrendingUp className="h-3.5 w-3.5" />
-          </div>
-          <span className="text-emerald-900">|</span>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400">USD/EUR:</span>
-            <span className="text-emerald-300 font-semibold">0.9242</span>
-            <span className="text-emerald-400 text-[10px]">+0.14%</span>
-          </div>
-          <span className="text-emerald-900">|</span>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400">USD/GBP:</span>
-            <span className="text-emerald-300 font-semibold">0.7894</span>
-            <span className="text-emerald-400 text-[10px]">+0.09%</span>
-          </div>
-          <span className="text-emerald-900">|</span>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400">GOLD/USD:</span>
-            <span className="text-amber-300 font-semibold">$2,718.40</span>
-            <span className="text-emerald-400 text-[10px]">+0.82%</span>
-          </div>
-          <span className="text-emerald-900">|</span>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400">SWIFT ATOMIC WIRE SPEED:</span>
-            <span className="text-teal-300 font-semibold">&lt; 1.4 SECONDS</span>
-          </div>
-          <span className="text-emerald-900">|</span>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400">USD/BDT:</span>
-            <span className="text-emerald-300 font-semibold">121.50</span>
-            <span className="text-emerald-400 text-[10px]">+0.05%</span>
-          </div>
-          <span className="text-emerald-900">|</span>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400">DEPOSIT INSURANCE:</span>
-            <span className="text-emerald-300 font-semibold">FDIC $250,000 PER DEPOSITOR</span>
-          </div>
-          <span className="text-emerald-900">|</span>
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400">CROSS-BORDER FX SPREAD:</span>
-            <span className="text-teal-300 font-semibold">0.00% ZERO MARKUP</span>
-          </div>
+          {[0, 1].map((copyIndex) => (
+            <React.Fragment key={copyIndex}>
+              <div className="flex items-center gap-2 text-emerald-400">
+                <span className="text-slate-400">HIGH-YIELD VAULT APY:</span>
+                <span className="font-bold">5.40% GUARANTEED</span>
+                <TrendingUp className="h-3.5 w-3.5" />
+              </div>
+              <span className="text-emerald-900">|</span>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400">USD/EUR:</span>
+                <span className="text-emerald-300 font-semibold">0.9242</span>
+                <span className="text-emerald-400 text-[10px]">+0.14%</span>
+              </div>
+              <span className="text-emerald-900">|</span>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400">USD/GBP:</span>
+                <span className="text-emerald-300 font-semibold">0.7894</span>
+                <span className="text-emerald-400 text-[10px]">+0.09%</span>
+              </div>
+              <span className="text-emerald-900">|</span>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400">GOLD/USD:</span>
+                <span className="text-amber-300 font-semibold">$2,718.40</span>
+                <span className="text-emerald-400 text-[10px]">+0.82%</span>
+              </div>
+              <span className="text-emerald-900">|</span>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400">SWIFT ATOMIC WIRE SPEED:</span>
+                <span className="text-teal-300 font-semibold">&lt; 1.4 SECONDS</span>
+              </div>
+              <span className="text-emerald-900">|</span>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400">USD/BDT:</span>
+                <span className="text-emerald-300 font-semibold">121.50</span>
+                <span className="text-emerald-400 text-[10px]">+0.05%</span>
+              </div>
+              <span className="text-emerald-900">|</span>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400">DEPOSIT INSURANCE:</span>
+                <span className="text-emerald-300 font-semibold">FDIC $250,000 PER DEPOSITOR</span>
+              </div>
+              <span className="text-emerald-900">|</span>
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400">CROSS-BORDER FX SPREAD:</span>
+                <span className="text-teal-300 font-semibold">0.00% ZERO MARKUP</span>
+              </div>
+              <span className="text-emerald-900">|</span>
+            </React.Fragment>
+          ))}
         </div>
       </section>
 
       {/* Hero Section: Majestic Sovereign Digital Banking */}
-      <section className="relative pt-12 pb-24 md:pt-20 md:pb-32 overflow-hidden">
+      <section className="relative pt-8 pb-20 md:pt-20 md:pb-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
             {/* Left Column: Authentic Commercial Banking Narrative */}
-            <div className="lg:col-span-7 space-y-6 text-left">
+            <div className="lg:col-span-7 space-y-5 sm:space-y-6 text-left">
               {/* Trust Badge */}
-              <div className="inline-flex items-center gap-2.5 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-4 py-1.5 text-xs font-medium text-emerald-300 backdrop-blur-xl">
-                <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>Next-Gen Private Reserve & Institutional Banking</span>
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-medium text-emerald-300 backdrop-blur-xl max-w-full">
+                <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="truncate">Next-Gen Private Reserve & Institutional Banking</span>
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
               </div>
 
               {/* Grand Headline */}
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08]">
+              <h1 className="text-3xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12] sm:leading-[1.08]">
                 Sovereign Wealth. <br />
                 <span className="bg-linear-to-r from-emerald-300 via-teal-300 to-emerald-500 bg-clip-text text-transparent">
                   Borderless Precision.
@@ -468,7 +480,7 @@ export default function HomePage() {
               </h1>
 
               {/* Real Bank Subtitle */}
-              <p className="text-base sm:text-xl text-slate-300 font-normal leading-relaxed max-w-2xl">
+              <p className="text-sm sm:text-xl text-slate-300 font-normal leading-relaxed max-w-2xl">
                 Experience the world’s premier digital banking ecosystem. Safeguard capital in
                 FDIC-insured vaults earning <strong className="text-emerald-300 font-semibold">5.40% APY</strong>,
                 settle cross-border transactions at pure interbank rates, and command your wealth with
@@ -476,25 +488,25 @@ export default function HomePage() {
               </p>
 
               {/* Action Buttons */}
-              <div className="pt-2 flex flex-wrap items-center gap-4">
-                <Link href={isAuthenticated ? dashboardLink : "/register"}>
-                  <button className="group relative flex items-center gap-3 rounded-2xl bg-linear-to-r from-emerald-500 via-teal-400 to-emerald-600 px-7 py-4 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.02] active:scale-98 transition-all">
-                    <ScanLine className="h-5 w-5 text-slate-950" />
-                    <span>{isAuthenticated ? "Go to Live Portal" : "Open Account in 3 Mins"}</span>
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+                <Link href={isAuthenticated ? dashboardLink : "/register"} className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto group relative flex items-center justify-center gap-3 rounded-2xl bg-linear-to-r from-emerald-500 via-teal-400 to-emerald-600 px-6 sm:px-7 py-3.5 sm:py-4 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.02] active:scale-98 transition-all">
+                    <ScanLine className="h-5 w-5 text-slate-950 shrink-0" />
+                    <span className="whitespace-nowrap">{isAuthenticated ? "Go to Live Portal" : "Open Account in 3 Mins"}</span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 shrink-0" />
                   </button>
                 </Link>
 
-                <a href="#calculator">
-                  <button className="flex items-center gap-2 rounded-2xl border border-emerald-500/30 bg-emerald-950/40 px-6 py-4 text-sm font-semibold text-emerald-200 hover:bg-emerald-900/60 hover:text-white transition-all backdrop-blur-xl">
-                    <Coins className="h-4 w-4 text-emerald-400" />
+                <a href="#calculator" className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-2xl border border-emerald-500/30 bg-emerald-950/40 px-5 sm:px-6 py-3.5 sm:py-4 text-sm font-semibold text-emerald-200 hover:bg-emerald-900/60 hover:text-white transition-all backdrop-blur-xl whitespace-nowrap">
+                    <Coins className="h-4 w-4 text-emerald-400 shrink-0" />
                     <span>Calculate 5.40% Yield</span>
                   </button>
                 </a>
               </div>
 
               {/* Fast Security Checkpoints */}
-              <div className="pt-2 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-slate-400">
+              <div className="pt-2 flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-y-2 gap-x-6 text-xs text-slate-400">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
                   <span>Smart OCR Automated ID Scan</span>
@@ -510,46 +522,46 @@ export default function HomePage() {
               </div>
 
               {/* 4 Financial Confidence Metrics */}
-              <div className="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-emerald-950/80">
+              <div className="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 border-t border-emerald-950/80">
                 <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+                  <div className="text-xl sm:text-3xl font-extrabold text-white font-mono">
                     $48.2B+
                   </div>
-                  <div className="text-xs text-emerald-400/80 font-medium mt-0.5">
+                  <div className="text-[11px] sm:text-xs text-emerald-400/80 font-medium mt-0.5">
                     Assets Safeguarded
                   </div>
                 </div>
                 <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-emerald-300 font-mono">
+                  <div className="text-xl sm:text-3xl font-extrabold text-emerald-300 font-mono">
                     5.40%
                   </div>
-                  <div className="text-xs text-emerald-400/80 font-medium mt-0.5">
+                  <div className="text-[11px] sm:text-xs text-emerald-400/80 font-medium mt-0.5">
                     Guaranteed APY Yield
                   </div>
                 </div>
                 <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-teal-300 font-mono">
+                  <div className="text-xl sm:text-3xl font-extrabold text-teal-300 font-mono">
                     &lt; 1.4s
                   </div>
-                  <div className="text-xs text-emerald-400/80 font-medium mt-0.5">
-                    Atomic Wire Clearance
+                  <div className="text-[11px] sm:text-xs text-emerald-400/80 font-medium mt-0.5">
+                    Atomic Clearance
                   </div>
                 </div>
                 <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+                  <div className="text-xl sm:text-3xl font-extrabold text-white font-mono">
                     180+
                   </div>
-                  <div className="text-xs text-emerald-400/80 font-medium mt-0.5">
-                    Global Jurisdictions
+                  <div className="text-[11px] sm:text-xs text-emerald-400/80 font-medium mt-0.5">
+                    Jurisdictions
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Right Column: 3D Interactive Metal Bank Card & Live Banking Stream */}
-            <div className="lg:col-span-5 relative flex flex-col items-center w-full">
+            <div className="lg:col-span-5 relative flex flex-col items-center w-full mt-4 lg:mt-0">
               {/* Card Tier Switcher Selector */}
-              <div className="mb-10 sm:mb-12 flex items-center p-1 rounded-2xl glass-forest-pill border border-emerald-500/20 text-xs shadow-md">
+              <div className="mb-8 sm:mb-12 flex items-center p-1 rounded-2xl glass-forest-pill border border-emerald-500/20 text-xs shadow-md max-w-full overflow-x-auto">
                 {(["emerald", "obsidian", "platinum"] as CardTier[]).map((tier) => (
                   <button
                     key={tier}
@@ -557,7 +569,7 @@ export default function HomePage() {
                       setSelectedCardTier(tier);
                       setIsCardFlipped(false);
                     }}
-                    className={`px-4 sm:px-5 py-1.5 rounded-xl font-medium transition-all capitalize ${
+                    className={`px-3.5 sm:px-5 py-1.5 rounded-xl font-medium transition-all capitalize whitespace-nowrap ${
                       selectedCardTier === tier
                         ? "bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
                         : "text-slate-400 hover:text-white"
@@ -569,33 +581,33 @@ export default function HomePage() {
               </div>
 
               {/* 3D Flippable Bank Card Wrapper */}
-              <div className="w-full max-w-sm sm:max-w-md relative">
+              <div className="w-full max-w-[320px] sm:max-w-md relative">
                 {/* Floating Activity Alert #1 (Incoming Wire) */}
-                <div className="absolute -top-7 -left-2 sm:-left-6 z-20 animate-float pointer-events-none">
-                  <div className="glass-forest-card rounded-2xl px-3.5 py-2.5 flex items-center gap-3 border border-emerald-400/30 shadow-2xl backdrop-blur-2xl">
-                    <div className="h-8 w-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
-                      <ArrowDownLeft className="h-4 w-4" />
+                <div className="absolute -top-6 left-0 sm:-left-6 z-20 animate-float pointer-events-none">
+                  <div className="glass-forest-card rounded-2xl px-2.5 sm:px-3.5 py-1.5 sm:py-2.5 flex items-center gap-2 sm:gap-3 border border-emerald-400/30 shadow-2xl backdrop-blur-2xl">
+                    <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                      <ArrowDownLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </div>
                     <div>
-                      <div className="text-[10px] text-emerald-400/80 uppercase tracking-wider font-mono">
+                      <div className="text-[9px] sm:text-[10px] text-emerald-400/80 uppercase tracking-wider font-mono">
                         Incoming Wire • Zurich
                       </div>
-                      <div className="text-xs font-bold text-white font-mono">+$35,000.00 USD</div>
+                      <div className="text-[11px] sm:text-xs font-bold text-white font-mono">+$35,000.00 USD</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Floating Activity Alert #2 (Yield Payout) */}
-                <div className="absolute -bottom-5 -right-2 sm:-right-6 z-20 animate-float-reverse pointer-events-none">
-                  <div className="glass-forest-card rounded-2xl px-3.5 py-2.5 flex items-center gap-3 border border-emerald-400/30 shadow-2xl backdrop-blur-2xl">
-                    <div className="h-8 w-8 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
-                      <Sparkles className="h-4 w-4" />
+                <div className="absolute -bottom-5 right-0 sm:-right-6 z-20 animate-float-reverse pointer-events-none">
+                  <div className="glass-forest-card rounded-2xl px-2.5 sm:px-3.5 py-1.5 sm:py-2.5 flex items-center gap-2 sm:gap-3 border border-emerald-400/30 shadow-2xl backdrop-blur-2xl">
+                    <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
+                      <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </div>
                     <div>
-                      <div className="text-[10px] text-teal-400/80 uppercase tracking-wider font-mono">
+                      <div className="text-[9px] sm:text-[10px] text-teal-400/80 uppercase tracking-wider font-mono">
                         Vault Payout (5.40% APY)
                       </div>
-                      <div className="text-xs font-bold text-emerald-300 font-mono">
+                      <div className="text-[11px] sm:text-xs font-bold text-emerald-300 font-mono">
                         +$521.80 Monthly
                       </div>
                     </div>
@@ -605,7 +617,7 @@ export default function HomePage() {
                 {/* The Physical Card Itself */}
                 <div
                   onClick={() => setIsCardFlipped(!isCardFlipped)}
-                  className={`w-full aspect-85/54 rounded-3xl p-6 sm:p-7 cursor-pointer transition-all duration-700 transform-style-3d shadow-2xl relative select-none ${
+                  className={`w-full aspect-85/54 rounded-2xl sm:rounded-3xl p-4 sm:p-7 cursor-pointer transition-all duration-700 transform-style-3d shadow-2xl relative select-none ${
                     activeCard.bgGradient
                   } border ${activeCard.borderColor} ${
                     isCardFlipped ? "rotate-y-180" : "hover:scale-[1.02]"
@@ -817,41 +829,41 @@ export default function HomePage() {
               </div>
 
               {/* Conversion Breakdown & Real Savings */}
-              <div className="glass-forest-pill rounded-2xl p-6 border border-emerald-400/20 space-y-4">
-                <div className="flex items-center justify-between text-xs pb-3 border-b border-emerald-900/40">
-                  <span className="text-slate-400">Live Wholesale Rate</span>
-                  <span className="font-mono font-semibold text-emerald-300">
+              <div className="glass-forest-pill rounded-2xl p-4 sm:p-6 border border-emerald-400/20 space-y-3">
+                <div className="flex items-start justify-between gap-2 text-xs pb-3 border-b border-emerald-900/40">
+                  <span className="text-slate-400 shrink">Live Wholesale Rate</span>
+                  <span className="font-mono font-semibold text-emerald-300 shrink-0 text-right whitespace-nowrap">
                     1 USD = {convertedFX.rate} {targetCurrency}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between text-xs pb-3 border-b border-emerald-900/40">
-                  <span className="text-slate-400">Apex Transfer Fee</span>
-                  <span className="font-mono font-bold text-teal-300">0.00 USD (FREE)</span>
+                <div className="flex items-start justify-between gap-2 text-xs pb-3 border-b border-emerald-900/40">
+                  <span className="text-slate-400 shrink">Apex Transfer Fee</span>
+                  <span className="font-mono font-bold text-teal-300 shrink-0 whitespace-nowrap">0.00 USD (FREE)</span>
                 </div>
 
-                <div className="flex items-center justify-between text-xs pb-3 border-b border-emerald-900/40">
-                  <span className="text-slate-400">Estimated Delivery Time</span>
-                  <span className="font-mono font-semibold text-white flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5 text-emerald-400" />
-                    Instant (Under 2 Seconds)
+                <div className="flex items-start justify-between gap-2 text-xs pb-3 border-b border-emerald-900/40">
+                  <span className="text-slate-400 shrink">Estimated Delivery</span>
+                  <span className="font-mono font-semibold text-white flex items-center gap-1 shrink-0 whitespace-nowrap">
+                    <Clock className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                    Instant (&lt;2s)
                   </span>
                 </div>
 
                 {/* Savings Callout */}
-                <div className="rounded-xl bg-emerald-500/10 border border-emerald-400/30 p-3 flex items-center justify-between">
-                  <div className="text-xs text-slate-300">
-                    Estimated savings vs. retail bank markup:
+                <div className="rounded-xl bg-emerald-500/10 border border-emerald-400/30 p-3 flex items-center justify-between gap-2">
+                  <div className="text-xs text-slate-300 shrink">
+                    Savings vs. retail bank:
                   </div>
-                  <div className="text-sm font-bold text-emerald-300 font-mono">
+                  <div className="text-sm font-bold text-emerald-300 font-mono shrink-0 whitespace-nowrap">
                     +${convertedFX.savingsUSD} USD
                   </div>
                 </div>
 
                 <Link href={isAuthenticated ? "/customer/transfer" : "/register"}>
                   <button className="w-full mt-2 py-3 rounded-xl bg-linear-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider hover:brightness-110 transition-all flex items-center justify-center gap-2">
-                    <span>Send {targetCurrency} at Interbank Rate</span>
-                    <ArrowRight className="h-4 w-4" />
+                    <span className="whitespace-nowrap">Send {targetCurrency} at Interbank Rate</span>
+                    <ArrowRight className="h-4 w-4 shrink-0" />
                   </button>
                 </Link>
               </div>
@@ -936,14 +948,14 @@ export default function HomePage() {
                 </div>
 
                 {/* Comparative Metric Bar */}
-                <div className="glass-forest-pill rounded-2xl p-4 border border-emerald-500/20 flex items-center justify-between text-xs">
-                  <div>
-                    <div className="text-slate-400">Yield Multiplier vs. Average Retail Bank:</div>
+                <div className="glass-forest-pill rounded-2xl p-4 border border-emerald-500/20 flex items-start justify-between gap-3 text-xs">
+                  <div className="min-w-0">
+                    <div className="text-slate-400">Yield Multiplier vs. Retail Bank:</div>
                     <div className="text-lg font-bold text-emerald-300 font-mono">
                       {calculatedSavings.multiplier}x Higher Returns
                     </div>
                   </div>
-                  <div className="h-10 w-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold font-mono">
+                  <div className="h-10 w-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold font-mono shrink-0 text-xs">
                     5.4%
                   </div>
                 </div>
@@ -990,8 +1002,8 @@ export default function HomePage() {
 
                 <Link href={isAuthenticated ? "/customer/deposit" : "/register"}>
                   <button className="w-full mt-2 py-3 rounded-xl bg-linear-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-xs uppercase tracking-wider hover:brightness-110 transition-all flex items-center justify-center gap-2">
-                    <span>Lock In 5.40% APY Vault</span>
-                    <ArrowRight className="h-4 w-4" />
+                    <span className="whitespace-nowrap">Lock In 5.40% APY Vault</span>
+                    <ArrowRight className="h-4 w-4 shrink-0" />
                   </button>
                 </Link>
               </div>
@@ -1012,7 +1024,7 @@ export default function HomePage() {
             </p>
 
             {/* Tab Controls */}
-            <div className="inline-flex max-w-full overflow-x-auto p-1.5 rounded-2xl glass-forest-pill border border-emerald-500/20 mt-4">
+            <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1.5 rounded-2xl glass-forest-pill border border-emerald-500/20 mt-4 whitespace-nowrap">
               <button
                 onClick={() => setActiveTab("personal")}
                 className={`px-5 py-2 rounded-xl text-xs font-semibold transition-all ${
@@ -1301,8 +1313,8 @@ export default function HomePage() {
           </div>
 
           <div className="max-w-4xl mx-auto glass-forest-card rounded-3xl overflow-hidden border border-emerald-500/30">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
+            <div className="overflow-x-auto no-scrollbar">
+              <table className="w-full min-w-[520px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-emerald-900/60 bg-emerald-950/50 text-xs font-mono uppercase">
                     <th className="py-4 px-6 text-slate-300">Feature</th>
@@ -1604,15 +1616,15 @@ export default function HomePage() {
               No minimum balance requirements. Full multi-currency privileges unlocked.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Link href={isAuthenticated ? dashboardLink : "/register"}>
-                <button className="flex items-center gap-2 rounded-2xl bg-linear-to-r from-emerald-500 via-teal-400 to-emerald-600 px-8 py-4 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/30 hover:scale-105 active:scale-95 transition-all">
-                  <span>{isAuthenticated ? "Open Dashboard" : "Open Your Bank Account"}</span>
-                  <ArrowRight className="h-4 w-4" />
+            <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4">
+              <Link href={isAuthenticated ? dashboardLink : "/register"} className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-500 via-teal-400 to-emerald-600 px-5 sm:px-8 py-4 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/30 hover:scale-105 active:scale-95 transition-all whitespace-nowrap">
+                  <span className="whitespace-nowrap">{isAuthenticated ? "Open Dashboard" : "Open Your Bank Account"}</span>
+                  <ArrowRight className="h-4 w-4 shrink-0" />
                 </button>
               </Link>
-              <Link href="/login">
-                <button className="rounded-2xl border border-emerald-500/30 bg-emerald-950/40 px-7 py-4 text-sm font-semibold text-emerald-200 hover:bg-emerald-900/60 transition-all">
+              <Link href="/login" className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto rounded-2xl border border-emerald-500/30 bg-emerald-950/40 px-5 sm:px-7 py-4 text-sm font-semibold text-emerald-200 hover:bg-emerald-900/60 transition-all whitespace-nowrap">
                   Existing Client Sign In
                 </button>
               </Link>
@@ -1632,9 +1644,9 @@ export default function HomePage() {
       <footer className="border-t border-emerald-950/90 bg-[#010805] text-slate-400 text-xs py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           {/* Top Directory Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
             {/* Brand column */}
-            <div className="col-span-2 space-y-4">
+            <div className="col-span-1 sm:col-span-2 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-tr from-emerald-600 to-teal-400 text-slate-950 font-bold">
                   <Landmark className="h-5 w-5" />
