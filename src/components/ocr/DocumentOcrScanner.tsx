@@ -383,7 +383,7 @@ export function DocumentOcrScanner({ onApplyData }: DocumentOcrScannerProps) {
 
             {extractedResult ? (
               <div className="space-y-2.5 text-xs">
-                <div className="grid grid-cols-2 gap-2 p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
                   <div>
                     <span className="text-[10px] text-slate-400 uppercase font-semibold">
                       Full Legal Name
@@ -402,7 +402,7 @@ export function DocumentOcrScanner({ onApplyData }: DocumentOcrScannerProps) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-2.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
                   <div>
                     <span className="text-[10px] text-slate-400 uppercase font-semibold">
                       Date of Birth
