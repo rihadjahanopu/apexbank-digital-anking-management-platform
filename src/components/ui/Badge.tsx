@@ -56,7 +56,7 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border font-medium capitalize transition-colors",
+        "inline-flex items-center gap-1.5 rounded-full border font-medium capitalize whitespace-nowrap shrink-0 transition-colors",
         variantStyles[variant],
         sizeStyles[size],
         className
