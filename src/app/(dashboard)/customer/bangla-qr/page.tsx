@@ -359,11 +359,11 @@ export default function BanglaQRPage() {
         {/* Header Branding */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2.5">
-              <div className="h-9 w-9 rounded-xl bg-linear-to-tr from-emerald-600 to-teal-400 text-slate-950 flex items-center justify-center font-bold">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="h-9 w-9 rounded-xl bg-linear-to-tr from-emerald-600 to-teal-400 text-slate-950 flex items-center justify-center font-bold shrink-0">
                 <QrCode className="h-5 w-5" />
               </div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
                 Bangla QR Payment Hub
               </h1>
               <Badge variant="success" dot>
@@ -376,7 +376,7 @@ export default function BanglaQRPage() {
           </div>
 
           {/* Navigation View Switcher */}
-          <div className="inline-flex p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80">
+          <div className="w-full sm:w-auto inline-flex p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 justify-center">
             <button
               onClick={() => {
                 setActiveTab("scan");
@@ -567,7 +567,7 @@ export default function BanglaQRPage() {
 
                   <form onSubmit={handleConfirmPayment} className="pt-5 space-y-4">
                     {/* Merchant Details Grid */}
-                    <div className="grid grid-cols-2 gap-3 text-xs p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800">
                       <div>
                         <span className="text-[10px] uppercase font-mono text-slate-400">Merchant ID:</span>
                         <div className="font-mono font-semibold text-slate-800 dark:text-slate-200 truncate">
@@ -893,7 +893,7 @@ export default function BanglaQRPage() {
                     <label className="block text-xs font-mono uppercase text-slate-500 mb-2">
                       QR Specification Mode
                     </label>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <button
                         type="button"
                         onClick={() => {
